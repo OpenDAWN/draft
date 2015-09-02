@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>generate impulse from timetable</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300">
+  <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <h1>generate impulse from timetable</h1>
+      <div class="rows">
+        <div class="form-group col-md-5">
+          <label>density:</label> <span>{{ density }}</span>
+          <input type="range" min="0" max="99" class="form-control" v-model="density" v-on="change:onChangeDensity">
+        </div>
+        <div class="form-group col-md-5">
+          <label>duration:</label> <span>{{ duration }}</span>
+          <input type="range" min="0.2" max="20" step="0.1" class="form-control" v-model="duration">
+        </div>
+        <div class="form-group col-md-2">
+          <label>download:</label>
+          <div>
+            <a href="{{ link }}" download v-if="link">
+              <button class="btn btn-success" style="width:100%">*.wav</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <canvas id="canvas" v-on="click:onClick"></canvas>
+    </div>
+  </div>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/0.12.12/vue.min.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
