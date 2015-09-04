@@ -1,12 +1,8 @@
-import sample from "@mohayonao/utils/sample";
-import RandGen from "@mohayonao/randgen";
 import getAudioContext from "@mohayonao/web-audio-utils/getAudioContext";
 import enableMobileAutoPlay from "@mohayonao/web-audio-utils/enableMobileAutoPlay";
 
-let audioContext = getAudioContext();
-let guardGC = [];
-
-enableMobileAutoPlay();
+const audioContext = enableMobileAutoPlay(getAudioContext());
+const gcGuard = [];
 
 function rendering(audioContext, timetable, limit, duration) {
   timetable.forEach((time) => {
@@ -16,11 +12,12 @@ function rendering(audioContext, timetable, limit, duration) {
     let amp = audioContext.createGain();
 
     osc.type = "triangle";
-    osc.frequency.value = sample([ 440, 880, 1760, 3520 ], new RandGen(time * 1000).random);
+    osc.frequency.value = [ 440, 880, 1760, 3520 ][Math.floor(time / timetable.length) % 4];
     osc.start(t0);
     osc.stop(t1);
 
-    amp.gain.setValueAtTime(0.75, t0);
+    amp.gain.setValueAtTime(0.0, t0);
+    amp.gain.linearRampToValueAtTime(0.5, t0 + 0.003);
     amp.gain.linearRampToValueAtTime(0.00, t1);
 
     osc.connect(amp);
@@ -49,11 +46,11 @@ function play(timetable, limit, duration, callback) {
     bufSrc.onended = () => {
       bufSrc.disconnect();
 
-      guardGC.splice(guardGC.indexOf(bufSrc), 1);
+      gcGuard.splice(gcGuard.indexOf(bufSrc), 1);
     };
     bufSrc.connect(audioContext.destination);
 
-    guardGC.push(bufSrc);
+    gcGuard.push(bufSrc);
 
     if (typeof callback === "function") {
       callback(renderedBuffer);
@@ -61,8 +58,17 @@ function play(timetable, limit, duration, callback) {
   };
 }
 
+function stop() {
+  gcGuard.splice(0).forEach((bufSrc) => {
+    bufSrc.disconnect();
+  });
+}
+
 export default {
   play(...args) {
     play(...args);
+  },
+  stop(...args) {
+    stop(...args);
   },
 };

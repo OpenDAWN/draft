@@ -15,13 +15,17 @@
       <div class="rows">
         <div class="form-group col-md-5">
           <label>density:</label> <span>{{ density }}</span>
-          <input type="range" min="0" max="99" class="form-control" v-model="density" v-on="change:onChangeDensity">
+          <input type="range" min="0" max="90" class="form-control" v-model="density" v-on="change:onChangeDensity">
         </div>
         <div class="form-group col-md-5">
           <label>duration:</label> <span>{{ duration }}</span>
-          <input type="range" min="0.2" max="20" step="0.1" class="form-control" v-model="duration">
+          <input type="range" min="0.5" max="30" step="0.1" class="form-control" v-model="duration">
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-1">
+          <label>unit:</label> <span>{{ unit ? "min" : "sec" }}</span>
+          <input type="range" min="0" max="1" class="form-control" v-model="unit">
+        </div>
+        <div class="form-group col-md-1">
           <label>download:</label>
           <div>
             <a href="{{ link }}" download v-if="link">
@@ -30,8 +34,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div style="text-align:center;margin-top:20px">
       <canvas id="canvas" v-on="click:onClick"></canvas>
     </div>
   </div>

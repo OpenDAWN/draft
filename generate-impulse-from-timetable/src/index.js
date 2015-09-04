@@ -15,6 +15,7 @@ global.onload = () => {
     data: {
       density: 0,
       duration: 4,
+      unit: 0,
       zoom: 1,
       limit: 14400,
       data: [],
@@ -31,6 +32,9 @@ global.onload = () => {
 
         this.data = createTimetable(this.zoom, this.limit).filter((_, i) => i % 27 === select);
 
+        player.stop();
+        viewer.stop();
+
         return this;
       },
       onChangeDensity() {
@@ -43,7 +47,14 @@ global.onload = () => {
 
         this.link = "";
 
-        player.play(this.data[index], this.limit, this.duration, (buffer) => {
+        player.stop();
+        viewer.stop();
+
+        let duration = this.duration * (this.unit ? 60 : 1);
+
+        player.play(this.data[index], this.limit, duration, (buffer) => {
+          viewer.play(index, buffer.duration);
+
           WavEncoder.encode({
             sampleRate: buffer.sampleRate,
             channelData: [ buffer.getChannelData(0) ],

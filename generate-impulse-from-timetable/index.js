@@ -1,83 +1,35 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = require("./lib");
-
-},{"./lib":3}],2:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var RandGen = function RandGen() {
-  var seed = arguments.length <= 0 || arguments[0] === undefined ? Date.now() : arguments[0];
-
-  _classCallCheck(this, RandGen);
-
-  var i1 = seed;
-  var i2 = (seed << 16) + (seed >> 16);
-  var z = i1 >>> 0 || 362436069;
-  var w = i2 >>> 0 || 521288629;
-
-  this.random = function () {
-    z = 36969 * (z & 65535) + (z >>> 16) & 0xFFFFFFFF;
-    w = 18000 * (w & 65535) + (w >>> 16) & 0xFFFFFFFF;
-
-    var value = ((z & 0xFFFF) << 16 | w & 0xFFFF) >>> 0;
-
-    return value / 4294967296;
-  };
-};
-
-exports["default"] = RandGen;
-module.exports = exports["default"];
-},{}],3:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _RandGen = require("./RandGen");
-
-var _RandGen2 = _interopRequireDefault(_RandGen);
-
-exports["default"] = _RandGen2["default"];
-module.exports = exports["default"];
-},{"./RandGen":2}],4:[function(require,module,exports){
-module.exports = function(array, rand) {
-  rand = rand || Math.random;
-
-  return array[(rand() * array.length)|0];
-};
-
-},{}],5:[function(require,module,exports){
 (function (global){
 var getAudioContext = require("./getAudioContext");
 
 /* eslint-disable no-unused-vars */
 
-module.exports = function(audioContext) {
+module.exports = function(audioContext, callback) {
   var memo = null;
 
   if (!("ontouchstart" in global)) {
-    return;
+    if (typeof callback === "function") {
+      setTimeout(callback, 0);
+    }
+    return audioContext;
   }
 
   audioContext = audioContext || getAudioContext();
 
   function choreFunction() {
     var bufSrc = audioContext.createBufferSource();
+    var buffer = audioContext.createBuffer(1, 128, audioContext.sampleRate);
 
+    bufSrc.buffer = buffer;
     bufSrc.start(audioContext.currentTime);
-    bufSrc.stop(audioContext.currentTime + 0.001);
+    bufSrc.stop(audioContext.currentTime + buffer.duration);
     bufSrc.connect(audioContext.destination);
     bufSrc.onended = function() {
       bufSrc.disconnect();
       memo = null;
+      if (typeof callback === "function") {
+        callback();
+      }
     };
     memo = bufSrc;
 
@@ -85,10 +37,12 @@ module.exports = function(audioContext) {
   }
 
   global.addEventListener("touchstart", choreFunction);
+
+  return audioContext;
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./getAudioContext":6}],6:[function(require,module,exports){
+},{"./getAudioContext":2}],2:[function(require,module,exports){
 (function (global){
 var audioContext = null;
 
@@ -107,7 +61,7 @@ module.exports = function() {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -203,7 +157,7 @@ var Encoder = (function () {
 
 exports["default"] = Encoder;
 module.exports = exports["default"];
-},{"./EncoderWorker":8,"inline-worker":12}],8:[function(require,module,exports){
+},{"./EncoderWorker":4,"inline-worker":8}],4:[function(require,module,exports){
 var dataview2 = require("dataview2");
 
 var self = {};
@@ -368,7 +322,7 @@ encoder.self = encoder.util = self;
 
 module.exports = encoder;
 
-},{"dataview2":10}],9:[function(require,module,exports){
+},{"dataview2":6}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -383,7 +337,7 @@ var _Encoder2 = _interopRequireDefault(_Encoder);
 
 exports["default"] = _Encoder2["default"];
 module.exports = exports["default"];
-},{"./Encoder":7}],10:[function(require,module,exports){
+},{"./Encoder":3}],6:[function(require,module,exports){
 (function (global){
 var BufferDataView = require("buffer-dataview");
 
@@ -407,7 +361,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"buffer-dataview":11}],11:[function(require,module,exports){
+},{"buffer-dataview":7}],7:[function(require,module,exports){
 
 /**
  * Module exports.
@@ -666,11 +620,11 @@ DataView.prototype.setFloat64 = function (byteOffset, value, littleEndian) {
   }
 };
 
-},{}],12:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 module.exports = require("./inline-worker");
-},{"./inline-worker":13}],13:[function(require,module,exports){
+},{"./inline-worker":9}],9:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -722,7 +676,7 @@ var InlineWorker = (function () {
 
 module.exports = InlineWorker;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],14:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -735,6 +689,18 @@ function rotate(list, index) {
   var result = list.slice();
 
   return result.slice(index).concat(result.slice(0, index));
+}
+
+function uniq(list) {
+  var result = [];
+
+  list.forEach(function (x) {
+    if (result.indexOf(x) === -1) {
+      result.push(x);
+    }
+  });
+
+  return result;
 }
 
 function crawl(list, zoom, limit) {
@@ -758,12 +724,18 @@ exports["default"] = function (zoom, limit) {
     for (var j = 0; j < TO_S.length; j++) {
       var a = crawl(rotate(TO_N, i), zoom, limit);
       var b = crawl(rotate(TO_S, j), zoom, limit);
+      var list = [].concat(a, b);
 
-      result.push([].concat(a, b).map(function (x) {
+      list = list.map(function (x) {
         return limit <= x ? x % limit : x;
-      }).sort(function (a, b) {
+      });
+      list = list.map(Math.round);
+      list = uniq(list);
+      list = list.sort(function (a, b) {
         return a - b;
-      }));
+      });
+
+      result.push(list);
     }
   }
 
@@ -772,7 +744,7 @@ exports["default"] = function (zoom, limit) {
 
 module.exports = exports["default"];
 
-},{}],15:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -780,14 +752,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var _mohayonaoUtilsSample = require("@mohayonao/utils/sample");
-
-var _mohayonaoUtilsSample2 = _interopRequireDefault(_mohayonaoUtilsSample);
-
-var _mohayonaoRandgen = require("@mohayonao/randgen");
-
-var _mohayonaoRandgen2 = _interopRequireDefault(_mohayonaoRandgen);
 
 var _mohayonaoWebAudioUtilsGetAudioContext = require("@mohayonao/web-audio-utils/getAudioContext");
 
@@ -797,10 +761,8 @@ var _mohayonaoWebAudioUtilsEnableMobileAutoPlay = require("@mohayonao/web-audio-
 
 var _mohayonaoWebAudioUtilsEnableMobileAutoPlay2 = _interopRequireDefault(_mohayonaoWebAudioUtilsEnableMobileAutoPlay);
 
-var audioContext = (0, _mohayonaoWebAudioUtilsGetAudioContext2["default"])();
-var guardGC = [];
-
-(0, _mohayonaoWebAudioUtilsEnableMobileAutoPlay2["default"])();
+var audioContext = (0, _mohayonaoWebAudioUtilsEnableMobileAutoPlay2["default"])((0, _mohayonaoWebAudioUtilsGetAudioContext2["default"])());
+var gcGuard = [];
 
 function rendering(audioContext, timetable, limit, duration) {
   timetable.forEach(function (time) {
@@ -810,11 +772,12 @@ function rendering(audioContext, timetable, limit, duration) {
     var amp = audioContext.createGain();
 
     osc.type = "triangle";
-    osc.frequency.value = (0, _mohayonaoUtilsSample2["default"])([440, 880, 1760, 3520], new _mohayonaoRandgen2["default"](time * 1000).random);
+    osc.frequency.value = [440, 880, 1760, 3520][Math.floor(time / timetable.length) % 4];
     osc.start(t0);
     osc.stop(t1);
 
-    amp.gain.setValueAtTime(0.75, t0);
+    amp.gain.setValueAtTime(0.0, t0);
+    amp.gain.linearRampToValueAtTime(0.5, t0 + 0.003);
     amp.gain.linearRampToValueAtTime(0.00, t1);
 
     osc.connect(amp);
@@ -845,11 +808,11 @@ function _play(timetable, limit, duration, callback) {
     bufSrc.onended = function () {
       bufSrc.disconnect();
 
-      guardGC.splice(guardGC.indexOf(bufSrc), 1);
+      gcGuard.splice(gcGuard.indexOf(bufSrc), 1);
     };
     bufSrc.connect(audioContext.destination);
 
-    guardGC.push(bufSrc);
+    gcGuard.push(bufSrc);
 
     if (typeof callback === "function") {
       callback(renderedBuffer);
@@ -857,14 +820,23 @@ function _play(timetable, limit, duration, callback) {
   };
 }
 
+function _stop() {
+  gcGuard.splice(0).forEach(function (bufSrc) {
+    bufSrc.disconnect();
+  });
+}
+
 exports["default"] = {
   play: function play() {
     _play.apply(undefined, arguments);
+  },
+  stop: function stop() {
+    _stop.apply(undefined, arguments);
   }
 };
 module.exports = exports["default"];
 
-},{"@mohayonao/randgen":1,"@mohayonao/utils/sample":4,"@mohayonao/web-audio-utils/enableMobileAutoPlay":5,"@mohayonao/web-audio-utils/getAudioContext":6}],16:[function(require,module,exports){
+},{"@mohayonao/web-audio-utils/enableMobileAutoPlay":1,"@mohayonao/web-audio-utils/getAudioContext":2}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -872,11 +844,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 var canvas = document.getElementById("canvas");
 
-canvas.width = 1280;
-canvas.height = 480;
+var _timetables = null;
+var _animationId = 0;
+var _imageData = null;
+
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
 
 function _draw(timetables, zoom, limit) {
   var context = canvas.getContext("2d");
+
+  _timetables = timetables;
 
   context.fillStyle = "#2c3e50";
   context.fillRect(0, 0, canvas.width, canvas.height);
@@ -885,23 +863,25 @@ function _draw(timetables, zoom, limit) {
   context.strokeStyle = "#bdc3c7";
 
   timetables.forEach(function (timetable, index) {
-    var y0 = index / timetables.length * canvas.height | 0 + 0.5;
+    var y0 = (index / timetables.length * canvas.height | 0) + 0.5;
     var yh = Math.max(canvas.height / timetables.length, 1) | 0;
 
     timetable.forEach(function (time) {
-      var x0 = time / limit * canvas.width | 0 + 0.5;
+      var x0 = (time / limit * canvas.width | 0) + 0.5;
       var xw = Math.max(canvas.width / limit, 1) | 0;
 
       context.fillRect(x0, y0, xw, yh);
     });
 
-    context.beginPath();
-    context.moveTo(0, (y0 | 0) + 0.5);
-    context.lineTo(canvas.width, (y0 | 0) + 0.5);
-    context.stroke();
+    if (index) {
+      context.beginPath();
+      context.moveTo(0, (y0 | 0) + 0.5);
+      context.lineTo(canvas.width, (y0 | 0) + 0.5);
+      context.stroke();
+    }
   });
 
-  for (var time = 0; time < limit; time += 3600) {
+  for (var time = 1; time < limit; time += 3600) {
     var x0 = time / limit * canvas.width;
 
     context.beginPath();
@@ -909,11 +889,54 @@ function _draw(timetables, zoom, limit) {
     context.lineTo((x0 | 0) + 0.5, canvas.height);
     context.stroke();
   }
+
+  _imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+function _play(index, duration) {
+  var context = canvas.getContext("2d");
+
+  context.strokeStyle = "#f1c40f";
+
+  var startTime = Date.now();
+  var y0 = (index / _timetables.length * canvas.height | 0) + 0.5;
+  var yh = Math.max(canvas.height / _timetables.length, 1) | 0;
+  var y1 = y0 + yh;
+
+  function animate() {
+    if (_animationId === -1) {
+      return;
+    }
+    context.putImageData(_imageData, 0, 0);
+
+    var elapsed = (Date.now() - startTime) / 1000;
+    var x0 = Math.max(0, Math.min(elapsed / duration, 1)) * canvas.width;
+    var x1 = x0;
+
+    context.beginPath();
+    context.moveTo((x0 | 0) + 0.5, y0);
+    context.lineTo((x1 | 0) + 0.5, y1);
+    context.stroke();
+
+    _animationId = requestAnimationFrame(animate);
+  }
+
+  _animationId = requestAnimationFrame(animate);
+}
+
+function _stop() {
+  _animationId = -1;
 }
 
 exports["default"] = Object.defineProperties({
   draw: function draw() {
     _draw.apply(undefined, arguments);
+  },
+  play: function play() {
+    _play.apply(undefined, arguments);
+  },
+  stop: function stop() {
+    _stop.apply(undefined, arguments);
   }
 }, {
   width: {
@@ -933,7 +956,7 @@ exports["default"] = Object.defineProperties({
 });
 module.exports = exports["default"];
 
-},{}],17:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -967,6 +990,7 @@ global.onload = function () {
     data: {
       density: 0,
       duration: 4,
+      unit: 0,
       zoom: 1,
       limit: 14400,
       data: [],
@@ -985,6 +1009,9 @@ global.onload = function () {
           return i % 27 === select;
         });
 
+        _player2["default"].stop();
+        _viewer2["default"].stop();
+
         return this;
       },
       onChangeDensity: function onChangeDensity() {
@@ -999,7 +1026,14 @@ global.onload = function () {
 
         this.link = "";
 
-        _player2["default"].play(this.data[index], this.limit, this.duration, function (buffer) {
+        _player2["default"].stop();
+        _viewer2["default"].stop();
+
+        var duration = this.duration * (this.unit ? 60 : 1);
+
+        _player2["default"].play(this.data[index], this.limit, duration, function (buffer) {
+          _viewer2["default"].play(index, buffer.duration);
+
           _wavEncoder2["default"].encode({
             sampleRate: buffer.sampleRate,
             channelData: [buffer.getChannelData(0)]
@@ -1015,4 +1049,4 @@ global.onload = function () {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./createTimetable":14,"./player":15,"./viewer":16,"wav-encoder":9}]},{},[17]);
+},{"./createTimetable":10,"./player":11,"./viewer":12,"wav-encoder":5}]},{},[13]);

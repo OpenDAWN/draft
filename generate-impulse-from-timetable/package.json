@@ -2,9 +2,7 @@
   "name": "generate-impulse-from-timetable",
   "version": "0.0.0",
   "dependencies": {
-    "@mohayonao/randgen": "^0.2.0",
-    "@mohayonao/utils": "^0.3.0",
-    "@mohayonao/web-audio-utils": "^0.4.0",
+    "@mohayonao/web-audio-utils": "^0.5.1",
     "audiodata": "^1.1.0",
     "wav-encoder": "^0.3.0"
   },

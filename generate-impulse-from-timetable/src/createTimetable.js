@@ -7,6 +7,18 @@ function rotate(list, index) {
   return result.slice(index).concat(result.slice(0, index));
 }
 
+function uniq(list) {
+  let result = [];
+
+  list.forEach((x) => {
+    if (result.indexOf(x) === -1) {
+      result.push(x);
+    }
+  });
+
+  return result;
+}
+
 function crawl(list, zoom, limit) {
   let result = [];
   let time = 0;
@@ -28,8 +40,14 @@ export default function(zoom, limit) {
     for (let j = 0; j < TO_S.length; j++) {
       let a = crawl(rotate(TO_N, i), zoom, limit);
       let b = crawl(rotate(TO_S, j), zoom, limit);
+      let list = [].concat(a, b);
 
-      result.push([].concat(a, b).map(x => limit <= x ? x % limit : x).sort((a, b) => a - b));
+      list = list.map(x => limit <= x ? x % limit : x);
+      list = list.map(Math.round);
+      list = uniq(list);
+      list = list.sort((a, b) => a - b);
+
+      result.push(list);
     }
   }
 
