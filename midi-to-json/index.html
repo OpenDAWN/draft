@@ -11,7 +11,7 @@
 <body>
   <div id="app" class="container">
     <h1>midi to json</h1>
-    <div class="rows">
+    <div class="row">
       <div class="form-group col-md-10">
         <label>tempo:</label> <span>{{ tempo }}</span>
         <div>
@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="rows">
+    <div class="row">
       <div class="form-group col-md-5">
         <label>attackTime:</label> <span>{{ timeFormat(attackTime) }}</span>
         <div>
@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div class="rows">
+    <div class="row">
       <div class="form-group col-md-12">
         <textarea rows="20" class="form-control" placeholder="drag a *.mid" v-model="data"></textarea>
       </div>
