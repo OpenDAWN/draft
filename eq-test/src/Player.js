@@ -4,6 +4,7 @@ import WorkerTimer from "worker-timer";
 import EQ from "@mohayonao/eq";
 import Track from "./Track";
 import getAudioContext from "@mohayonao/web-audio-utils/getAudioContext";
+import enableMobileAutoPlay from "@mohayonao/web-audio-utils/enableMobileAutoPlay";
 import fetchAudioBuffer from "@mohayonao/web-audio-utils/fetchAudioBuffer";
 import GCGuard from "@mohayonao/web-audio-utils/GCGuard";
 import removeIfExists from "@mohayonao/utils/removeIfExists";
@@ -20,7 +21,7 @@ export default class Player extends EventEmitter {
   constructor() {
     super();
 
-    this.audioContext = getAudioContext();
+    this.audioContext = enableMobileAutoPlay(getAudioContext());
     this.timeline = new Timeline({ context: this.audioContext, timerAPI: WorkerTimer });
 
     this.outlet = this.audioContext.createConvolver();

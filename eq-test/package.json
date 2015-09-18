@@ -6,7 +6,7 @@
     "@mohayonao/event-emitter": "^1.0.1",
     "@mohayonao/timeline": "^0.2.2",
     "@mohayonao/utils": "^0.3.0",
-    "@mohayonao/web-audio-utils": "^0.6.0",
+    "@mohayonao/web-audio-utils": "^0.6.1",
     "worker-timer": "^0.1.1"
   },
   "devDependencies": {

@@ -516,6 +516,50 @@ module.exports = {
 (function (global){
 var getAudioContext = require("./getAudioContext");
 
+/* eslint-disable no-unused-vars */
+
+module.exports = function(audioContext, callback) {
+  var memo = null;
+
+  if (!("touchend" in global)) {
+    if (typeof callback === "function") {
+      setTimeout(callback, 0);
+    }
+    return audioContext;
+  }
+
+  audioContext = audioContext || getAudioContext();
+
+  function choreFunction() {
+    var bufSrc = audioContext.createBufferSource();
+    var buffer = audioContext.createBuffer(1, 128, audioContext.sampleRate);
+
+    bufSrc.buffer = buffer;
+    bufSrc.start(audioContext.currentTime);
+    bufSrc.stop(audioContext.currentTime + buffer.duration);
+    bufSrc.connect(audioContext.destination);
+    bufSrc.onended = function() {
+      bufSrc.disconnect();
+      memo = null;
+      if (typeof callback === "function") {
+        callback();
+      }
+    };
+    memo = bufSrc;
+
+    global.removeEventListener("touchend", choreFunction);
+  }
+
+  global.addEventListener("touchend", choreFunction);
+
+  return audioContext;
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./getAudioContext":20}],19:[function(require,module,exports){
+(function (global){
+var getAudioContext = require("./getAudioContext");
+
 function fetchWithXHR(url) {
   return new Promise(function(resolve, reject) {
     var xhr = new global.XMLHttpRequest();
@@ -553,7 +597,7 @@ module.exports = function(path, audioContext) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./getAudioContext":19}],19:[function(require,module,exports){
+},{"./getAudioContext":20}],20:[function(require,module,exports){
 (function (global){
 var audioContext = null;
 
@@ -572,7 +616,7 @@ module.exports = function() {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -639,7 +683,7 @@ if (!(global === global.window && global.URL && global.Blob && global.Worker)) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -680,6 +724,10 @@ var _mohayonaoWebAudioUtilsGetAudioContext = require("@mohayonao/web-audio-utils
 
 var _mohayonaoWebAudioUtilsGetAudioContext2 = _interopRequireDefault(_mohayonaoWebAudioUtilsGetAudioContext);
 
+var _mohayonaoWebAudioUtilsEnableMobileAutoPlay = require("@mohayonao/web-audio-utils/enableMobileAutoPlay");
+
+var _mohayonaoWebAudioUtilsEnableMobileAutoPlay2 = _interopRequireDefault(_mohayonaoWebAudioUtilsEnableMobileAutoPlay);
+
 var _mohayonaoWebAudioUtilsFetchAudioBuffer = require("@mohayonao/web-audio-utils/fetchAudioBuffer");
 
 var _mohayonaoWebAudioUtilsFetchAudioBuffer2 = _interopRequireDefault(_mohayonaoWebAudioUtilsFetchAudioBuffer);
@@ -719,7 +767,7 @@ var Player = (function (_EventEmitter) {
 
     _get(Object.getPrototypeOf(Player.prototype), "constructor", this).call(this);
 
-    this.audioContext = (0, _mohayonaoWebAudioUtilsGetAudioContext2["default"])();
+    this.audioContext = (0, _mohayonaoWebAudioUtilsEnableMobileAutoPlay2["default"])((0, _mohayonaoWebAudioUtilsGetAudioContext2["default"])());
     this.timeline = new _mohayonaoTimeline2["default"]({ context: this.audioContext, timerAPI: _workerTimer2["default"] });
 
     this.outlet = this.audioContext.createConvolver();
@@ -855,7 +903,7 @@ var Player = (function (_EventEmitter) {
 exports["default"] = Player;
 module.exports = exports["default"];
 
-},{"./Track":22,"@mohayonao/eq":1,"@mohayonao/event-emitter":5,"@mohayonao/timeline":6,"@mohayonao/utils/dbamp":13,"@mohayonao/utils/range":14,"@mohayonao/utils/removeIfExists":15,"@mohayonao/utils/sample":16,"@mohayonao/web-audio-utils/GCGuard":17,"@mohayonao/web-audio-utils/fetchAudioBuffer":18,"@mohayonao/web-audio-utils/getAudioContext":19,"worker-timer":20}],22:[function(require,module,exports){
+},{"./Track":23,"@mohayonao/eq":1,"@mohayonao/event-emitter":5,"@mohayonao/timeline":6,"@mohayonao/utils/dbamp":13,"@mohayonao/utils/range":14,"@mohayonao/utils/removeIfExists":15,"@mohayonao/utils/sample":16,"@mohayonao/web-audio-utils/GCGuard":17,"@mohayonao/web-audio-utils/enableMobileAutoPlay":18,"@mohayonao/web-audio-utils/fetchAudioBuffer":19,"@mohayonao/web-audio-utils/getAudioContext":20,"worker-timer":21}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -930,7 +978,7 @@ var Track = (function (_EventEmitter) {
 exports["default"] = Track;
 module.exports = exports["default"];
 
-},{"@mohayonao/event-emitter":5,"@mohayonao/utils/range":14,"@mohayonao/utils/sample":16}],23:[function(require,module,exports){
+},{"@mohayonao/event-emitter":5,"@mohayonao/utils/range":14,"@mohayonao/utils/sample":16}],24:[function(require,module,exports){
 "use strict";
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -968,4 +1016,4 @@ window.onload = function () {
   });
 };
 
-},{"./Player":21}]},{},[23]);
+},{"./Player":22}]},{},[24]);
