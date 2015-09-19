@@ -29,20 +29,22 @@ var ADSREnvelope = (function () {
 
   _createClass(ADSREnvelope, [{
     key: "valueAt",
-    value: function valueAt(time) {
+    value: function valueAt() {
+      var time = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
       return this._.valueAt(time);
     }
   }, {
     key: "applyTo",
     value: function applyTo(audioParam, playbackTime) {
-      this.getWebAudioAPIMethods().forEach(function (_ref) {
+      this.getWebAudioAPIMethods(playbackTime).forEach(function (_ref) {
         var _ref2 = _slicedToArray(_ref, 3);
 
         var method = _ref2[0];
         var value = _ref2[1];
         var time = _ref2[2];
 
-        audioParam[method](value, time + playbackTime);
+        audioParam[method](value, time);
       });
 
       return this;
@@ -50,7 +52,9 @@ var ADSREnvelope = (function () {
   }, {
     key: "getWebAudioAPIMethods",
     value: function getWebAudioAPIMethods() {
-      return this._.methods();
+      var playbackTime = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
+      return this._.methods(playbackTime);
     }
   }, {
     key: "clone",
@@ -228,14 +232,15 @@ var ADSRParams = (function () {
     }
   }, {
     key: "methods",
-    value: function methods() {
+    value: function methods(playbackTime) {
       return this.envelope.map(function (_ref) {
         var _ref2 = _slicedToArray(_ref, 3);
 
         var type = _ref2[0];
         var value = _ref2[1];
         var time = _ref2[2];
-        return [method(type), value, time];
+
+        return [method(type), value, playbackTime + time];
       });
     }
   }, {
@@ -347,7 +352,7 @@ function method(type) {
   }
 }
 module.exports = exports["default"];
-},{"./EnvelopeBuilder":4,"./EnvelopeValue":6,"./constants":7,"./defaultValues":8,"@mohayonao/utils/constrain":10,"@mohayonao/utils/defaults":11}],4:[function(require,module,exports){
+},{"./EnvelopeBuilder":4,"./EnvelopeValue":6,"./constants":7,"./defaultValues":8,"@mohayonao/utils/constrain":16,"@mohayonao/utils/defaults":17}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -819,7 +824,7 @@ function buildAttackDecayReleaseEnvelope(params) {
 
 exports["default"] = { build: build };
 module.exports = exports["default"];
-},{"./EnvelopeReducer":5,"./constants":7,"@mohayonao/utils/linexp":12,"@mohayonao/utils/linlin":13}],5:[function(require,module,exports){
+},{"./EnvelopeReducer":5,"./constants":7,"@mohayonao/utils/linexp":18,"@mohayonao/utils/linlin":19}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -911,7 +916,7 @@ function at(envelope, time) {
 
 exports["default"] = { at: at };
 module.exports = exports["default"];
-},{"./constants":7,"@mohayonao/utils/linexp":12,"@mohayonao/utils/linlin":13}],7:[function(require,module,exports){
+},{"./constants":7,"@mohayonao/utils/linexp":18,"@mohayonao/utils/linlin":19}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -965,28 +970,8 @@ var _ADSREnvelope2 = _interopRequireDefault(_ADSREnvelope);
 exports["default"] = _ADSREnvelope2["default"];
 module.exports = exports["default"];
 },{"./ADSREnvelope":2}],10:[function(require,module,exports){
-module.exports = function(value, minValue, maxValue) {
-  return Math.max(minValue, Math.min(value, maxValue));
-};
-
-},{}],11:[function(require,module,exports){
-module.exports = function(value, defaultValue) {
-  return typeof value !== "undefined" ? value : defaultValue;
-};
-
-},{}],12:[function(require,module,exports){
-module.exports = function(value, inMin, inMax, outMin, outMax) {
-  return Math.pow(outMax / outMin, (value - inMin) / (inMax - inMin)) * outMin;
-};
-
-},{}],13:[function(require,module,exports){
-module.exports = function(value, inMin, inMax, outMin, outMax) {
-  return (value - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
-};
-
-},{}],14:[function(require,module,exports){
 arguments[4][1][0].apply(exports,arguments)
-},{"./lib":17,"dup":1}],15:[function(require,module,exports){
+},{"./lib":13,"dup":1}],11:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -1165,7 +1150,7 @@ var Timeline = (function (_EventEmitter) {
 exports["default"] = Timeline;
 module.exports = exports["default"];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./defaultContext":16,"@mohayonao/defaults":18,"@mohayonao/event-emitter":19}],16:[function(require,module,exports){
+},{"./defaultContext":12,"@mohayonao/defaults":14,"@mohayonao/event-emitter":15}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1181,7 +1166,7 @@ exports["default"] = Object.defineProperties({}, {
   }
 });
 module.exports = exports["default"];
-},{}],17:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1196,9 +1181,12 @@ var _Timeline2 = _interopRequireDefault(_Timeline);
 
 exports["default"] = _Timeline2["default"];
 module.exports = exports["default"];
-},{"./Timeline":15}],18:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],19:[function(require,module,exports){
+},{"./Timeline":11}],14:[function(require,module,exports){
+module.exports = function(value, defaultValue) {
+  return typeof value !== "undefined" ? value : defaultValue;
+};
+
+},{}],15:[function(require,module,exports){
 "use strict";
 
 var LISTENERS = typeof Symbol !== "undefined" ? Symbol("LISTENERS") : "_@mohayonao/event-emitter:listeners";
@@ -1292,6 +1280,23 @@ EventEmitter.prototype.emit = function(event, arg1) {
 };
 
 module.exports = EventEmitter;
+
+},{}],16:[function(require,module,exports){
+module.exports = function(value, minValue, maxValue) {
+  return Math.max(minValue, Math.min(value, maxValue));
+};
+
+},{}],17:[function(require,module,exports){
+arguments[4][14][0].apply(exports,arguments)
+},{"dup":14}],18:[function(require,module,exports){
+module.exports = function(value, inMin, inMax, outMin, outMax) {
+  return Math.pow(outMax / outMin, (value - inMin) / (inMax - inMin)) * outMin;
+};
+
+},{}],19:[function(require,module,exports){
+module.exports = function(value, inMin, inMax, outMin, outMax) {
+  return (value - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
+};
 
 },{}],20:[function(require,module,exports){
 module.exports = function(midi) {
@@ -2791,7 +2796,7 @@ function noteOn(_ref) {
 exports["default"] = { play: play, stop: stop };
 module.exports = exports["default"];
 
-},{"@mohayonao/adsr-envelope":1,"@mohayonao/timeline":14,"@mohayonao/utils/midicps":20,"@mohayonao/utils/removeIfExists":21,"@mohayonao/web-audio-utils/getAudioContext":22}],33:[function(require,module,exports){
+},{"@mohayonao/adsr-envelope":1,"@mohayonao/timeline":10,"@mohayonao/utils/midicps":20,"@mohayonao/utils/removeIfExists":21,"@mohayonao/web-audio-utils/getAudioContext":22}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2922,7 +2927,7 @@ global.onload = function () {
 
     var file = e.dataTransfer.files[0];
 
-    if (file.type === "audio/mid") {
+    if (file.type === "audio/mid" || file.type === "audio/midi") {
       _MIDIConverter2["default"].convert(file, function (data) {
         app.setData(data);
       });

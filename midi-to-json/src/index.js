@@ -84,7 +84,7 @@ global.onload = () => {
 
     let file = e.dataTransfer.files[0];
 
-    if (file.type === "audio/mid") {
+    if (file.type === "audio/mid" || file.type === "audio/midi") {
       MIDIConverter.convert(file, (data) => {
         app.setData(data);
       });
