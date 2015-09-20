@@ -399,7 +399,7 @@ var Timeline = (function (_EventEmitter) {
 exports["default"] = Timeline;
 module.exports = exports["default"];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./defaultContext":8,"@mohayonao/defaults":10,"@mohayonao/event-emitter":11}],8:[function(require,module,exports){
+},{"./defaultContext":8,"@mohayonao/defaults":10,"@mohayonao/event-emitter":5}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -436,8 +436,6 @@ module.exports = function(value, defaultValue) {
 };
 
 },{}],11:[function(require,module,exports){
-arguments[4][5][0].apply(exports,arguments)
-},{"dup":5}],12:[function(require,module,exports){
 module.exports = function(array, target) {
   var index = array.indexOf(target);
 
@@ -450,12 +448,12 @@ module.exports = function(array, target) {
   return true;
 };
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function(db) {
   return Math.pow(10, db * 0.05);
 };
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function(start, stop, step) {
   var length, result;
   var i;
@@ -477,7 +475,7 @@ module.exports = function(start, stop, step) {
   return result;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function(array, target) {
   var index = array.indexOf(target);
 
@@ -490,14 +488,14 @@ module.exports = function(array, target) {
   return true;
 };
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = function(array, rand) {
   rand = rand || Math.random;
 
   return array[(rand() * array.length)|0];
 };
 
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var appendIfNotExists = require("@mohayonao/utils/appendIfNotExists");
 var removeIfExists = require("@mohayonao/utils/removeIfExists");
 
@@ -510,9 +508,12 @@ module.exports = {
   remove: function(node) {
     removeIfExists(memo, node);
   },
+  dispose: function() {
+    return memo.splice(0);
+  },
 };
 
-},{"@mohayonao/utils/appendIfNotExists":12,"@mohayonao/utils/removeIfExists":15}],18:[function(require,module,exports){
+},{"@mohayonao/utils/appendIfNotExists":11,"@mohayonao/utils/removeIfExists":14}],17:[function(require,module,exports){
 (function (global){
 var getAudioContext = require("./getAudioContext");
 
@@ -521,7 +522,7 @@ var getAudioContext = require("./getAudioContext");
 module.exports = function(audioContext, callback) {
   var memo = null;
 
-  if (!("touchend" in global)) {
+  if (!("ontouchend" in global)) {
     if (typeof callback === "function") {
       setTimeout(callback, 0);
     }
@@ -556,7 +557,7 @@ module.exports = function(audioContext, callback) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./getAudioContext":20}],19:[function(require,module,exports){
+},{"./getAudioContext":19}],18:[function(require,module,exports){
 (function (global){
 var getAudioContext = require("./getAudioContext");
 
@@ -597,7 +598,7 @@ module.exports = function(path, audioContext) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./getAudioContext":20}],20:[function(require,module,exports){
+},{"./getAudioContext":19}],19:[function(require,module,exports){
 (function (global){
 var audioContext = null;
 
@@ -616,7 +617,7 @@ module.exports = function() {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -683,7 +684,7 @@ if (!(global === global.window && global.URL && global.Blob && global.Worker)) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -903,7 +904,7 @@ var Player = (function (_EventEmitter) {
 exports["default"] = Player;
 module.exports = exports["default"];
 
-},{"./Track":23,"@mohayonao/eq":1,"@mohayonao/event-emitter":5,"@mohayonao/timeline":6,"@mohayonao/utils/dbamp":13,"@mohayonao/utils/range":14,"@mohayonao/utils/removeIfExists":15,"@mohayonao/utils/sample":16,"@mohayonao/web-audio-utils/GCGuard":17,"@mohayonao/web-audio-utils/enableMobileAutoPlay":18,"@mohayonao/web-audio-utils/fetchAudioBuffer":19,"@mohayonao/web-audio-utils/getAudioContext":20,"worker-timer":21}],23:[function(require,module,exports){
+},{"./Track":22,"@mohayonao/eq":1,"@mohayonao/event-emitter":5,"@mohayonao/timeline":6,"@mohayonao/utils/dbamp":12,"@mohayonao/utils/range":13,"@mohayonao/utils/removeIfExists":14,"@mohayonao/utils/sample":15,"@mohayonao/web-audio-utils/GCGuard":16,"@mohayonao/web-audio-utils/enableMobileAutoPlay":17,"@mohayonao/web-audio-utils/fetchAudioBuffer":18,"@mohayonao/web-audio-utils/getAudioContext":19,"worker-timer":20}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -978,7 +979,7 @@ var Track = (function (_EventEmitter) {
 exports["default"] = Track;
 module.exports = exports["default"];
 
-},{"@mohayonao/event-emitter":5,"@mohayonao/utils/range":14,"@mohayonao/utils/sample":16}],24:[function(require,module,exports){
+},{"@mohayonao/event-emitter":5,"@mohayonao/utils/range":13,"@mohayonao/utils/sample":15}],23:[function(require,module,exports){
 "use strict";
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -1016,4 +1017,4 @@ window.onload = function () {
   });
 };
 
-},{"./Player":22}]},{},[24]);
+},{"./Player":21}]},{},[23]);
