@@ -1,0 +1,22 @@
+{
+  "name": "gps-test",
+  "version": "0.0.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babelify": "^6.3.0",
+    "browserify": "^11.0.1",
+    "watchify": "^3.3.1"
+  },
+  "homepage": "http://mohayonao.github.io/draft/gps-test/",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohayonao/draft/"
+  },
+  "scripts": {
+    "build": "browserify src --transform babelify --outfile index.js",
+    "watch": "watchify src --verbose --transform babelify --outfile index.js"
+  }
+}
