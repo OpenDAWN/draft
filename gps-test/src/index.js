@@ -14,6 +14,7 @@ global.onload = () => {
     data: {
       latitude: 0,
       longitude: 0,
+      accuracy: 0,
       guess: isEnabledGPS ? "" : "NOT SUPPORTED",
       reports: Object.keys(LOCATIONS).map((key) => {
         return {
@@ -33,6 +34,7 @@ global.onload = () => {
           global.navigator.geolocation.getCurrentPosition((pos) => {
             this.latitude = pos.coords.latitude;
             this.longitude = pos.coords.longitude;
+            this.accuracy = pos.coords.altitudeAccuracy;
 
             let maxDistance = Infinity;
             let nearPlace = null;
@@ -51,7 +53,7 @@ global.onload = () => {
               }
             });
 
-            if (nearPlace.distance <= 0.0002) {
+            if (nearPlace.distance <= 0.001) {
               this.guess = nearPlace.place;
             } else {
               this.guess = "NONE";

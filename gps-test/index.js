@@ -18,6 +18,7 @@ global.onload = function () {
     data: {
       latitude: 0,
       longitude: 0,
+      accuracy: 0,
       guess: isEnabledGPS ? "" : "NOT SUPPORTED",
       reports: Object.keys(LOCATIONS).map(function (key) {
         return {
@@ -39,6 +40,7 @@ global.onload = function () {
           global.navigator.geolocation.getCurrentPosition(function (pos) {
             _this.latitude = pos.coords.latitude;
             _this.longitude = pos.coords.longitude;
+            _this.accuracy = pos.coords.altitudeAccuracy;
 
             var maxDistance = Infinity;
             var nearPlace = null;
@@ -57,7 +59,7 @@ global.onload = function () {
               }
             });
 
-            if (nearPlace.distance <= 0.0002) {
+            if (nearPlace.distance <= 0.001) {
               _this.guess = nearPlace.place;
             } else {
               _this.guess = "NONE";

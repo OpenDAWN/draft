@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>gps test</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300">
   <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="index.css">
@@ -18,13 +17,16 @@
         </div>
       </div>
       <div class="row" style="margin: 15px 0">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label>latitude:</label> {{ latitude }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label>longitude:</label> {{ longitude }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+          <label>accuracy:</label> {{ accuracy }}
+        </div>
+        <div class="col-md-3">
           <label>guess:</label> {{ guess }}
         </div>
       </div>
