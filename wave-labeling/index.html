@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>wave labeling</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300">
+  <!-- <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <h1>wave labeling</h1>
+      <div class="row">
+        <div class="col-md-2">
+          <button class="btn btn-default" v-on="click:preview">PREVIEW</button>
+          <button class="btn btn-default" v-on="click:stop">STOP</button>
+        </div>
+        <div class="col-md-2">
+          <div><label><input type="radio" name="command" value="1" v-model="command"> ARRIVE</label></div>
+          <div><label><input type="radio" name="command" value="2" v-model="command"> CLIMAX</label></div>
+        </div>
+        <div class="col-md-8">
+          <div class="alert alert-info">{{ message }}</div>
+        </div>
+      </div>
+      <div style="margin-top:15px">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="panel panel-default" style="margin-top:25px; padding: 2px">
+        <div class="panel-body" v-repeat="markers">
+          <div class="row" v-on="click:selectWith($index)">
+            <div class="col-md-3">
+              <label>begin: </label>
+              <input type="text" class="form-control" v-model="begin" v-on="keydown:onKeydown($event, $index, 'begin'), change:onChange">
+            </div>
+            <div class="col-md-3">
+              <label>end: </label>
+              <input type="text" class="form-control" v-model="end" v-on="keydown:onKeydown($event, $index, 'end'), change:onChange">
+            </div>
+            <div class="col-md-3">
+              <label>duration: </label>
+              <input type="text" class="form-control" value="{{ end - begin }}" readonly>
+            </div>
+            <div class="col-md-1">
+              <label>nodeId: </label>
+              <input type="text" class="form-control" v-model="nodeId" v-on="keydown:onKeydown($event, $index, 'nodeId')">
+            </div>
+            <div class="col-md-2">
+              <label>control: </label>
+              <div>
+                <button class="btn btn-default" v-on="click:removeWith($index)">REMOVE</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <textarea class="form-control" rows="20" v-model="json"></textarea>
+      </div>
+    </div>
+  </div>
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/vue/0.12.12/vue.min.js"></script> -->
+  <script src="vue.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
