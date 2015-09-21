@@ -1,0 +1,29 @@
+{
+  "name": "unebi-sound-test",
+  "version": "0.0.0",
+  "dependencies": {
+    "@mohayonao/adsr-envelope": "^0.1.1",
+    "@mohayonao/event-emitter": "^1.0.1",
+    "@mohayonao/operator": "^0.1.4",
+    "@mohayonao/timeline": "^0.2.2",
+    "@mohayonao/utils": "^0.3.0",
+    "@mohayonao/web-audio-utils": "^0.6.2",
+    "worker-timer": "^0.1.1"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babelify": "^6.3.0",
+    "browserify": "^11.0.1",
+    "watchify": "^3.3.1"
+  },
+  "homepage": "http://mohayonao.github.io/draft/unebi-sound-test/",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohayonao/draft/"
+  },
+  "scripts": {
+    "build": "browserify src --transform babelify --outfile index.js",
+    "watch": "watchify src --verbose --transform babelify --outfile index.js"
+  }
+}

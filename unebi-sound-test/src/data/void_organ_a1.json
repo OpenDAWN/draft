@@ -1,0 +1,387 @@
+[
+  {
+    "time": 0,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 0.15748093785718084,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 0.32579454536549746,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 0.48505603397265074,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 0.637876379294321,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 0.7998949472885579,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 0.9662885451875627,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 1.1196218254510313,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 1.2632636165525764,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 1.4255055115465074,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 1.5913213717844337,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 1.74286953558214,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 1.9039593105856327,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 2.055202420921996,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 2.1984972709603605,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 2.3452787992358206,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 2.5155179999954997,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 2.6882137964479624,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 2.838090210435912,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 3.013157050618902,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 3.1665828421339395,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 3.31673862926662,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 3.474485566997901,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 3.6206109885033224,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 3.7654539549071346,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 3.914699605396018,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 4.0809986006934205,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 4.222062855828554,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 4.368995171748102,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 4.533391642924398,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 4.710052937911823,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 4.879043073039502,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 5.041125883786008,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 5.1830882602371275,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 5.345993382483721,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 5.5034491040464495,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 5.653169595832005,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 5.819983575372025,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 5.974273238182068,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 6.11471122561954,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 6.255363933062181,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 6.397994184801355,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 6.556255485769362,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 6.702222385657952,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 6.878593669906259,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 7.024791899584234,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 7.193182097133249,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 7.343417199067772,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 7.515220612678677,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 7.673900930704549,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 7.838928738469257,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 7.991019830573349,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 8.158018814576788,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 8.332314654504879,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 8.484333551526069,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 8.646715220473705,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 8.808893230492249,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 8.968874189546332,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 9.138163726739586,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 9.280543138403447,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 9.422925263587386,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 9.602415925888344,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 9.750362808471545,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 9.912836341941729,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 10.066822018334642,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 10.211878622760997,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 10.386850377060474,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 10.559070876305924,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 10.71326827689074,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 10.89111785857007,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 11.052066152552143,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 11.223156865136698,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 11.369326362013817,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 11.532055297270418,
+    "noteNumber": 68,
+    "duration": 0.2
+  },
+  {
+    "time": 11.678633512938395,
+    "noteNumber": 70,
+    "duration": 0.2
+  },
+  {
+    "time": 11.820357273714617,
+    "noteNumber": 66,
+    "duration": 0.2
+  },
+  {
+    "time": 11.978133876565844,
+    "noteNumber": 68,
+    "duration": 0.2
+  }
+]
