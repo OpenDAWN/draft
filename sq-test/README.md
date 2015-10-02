@@ -1,1 +1,1 @@
-http://mohayonao.github.io/draft/sq-test/
+http://mohayonao.github.io/draft/eq-test/

@@ -1,67 +1,389 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = require("./lib");
 
-},{"./lib":3}],2:[function(require,module,exports){
+},{"./lib":9}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _utils = require("./utils");
+var _ADSRParams = require("./ADSRParams");
 
-var utils = _interopRequireWildcard(_utils);
+var _ADSRParams2 = _interopRequireDefault(_ADSRParams);
 
-var EQ = function EQ(audioContext, paramList) {
-  _classCallCheck(this, EQ);
+var ADSREnvelope = (function () {
+  function ADSREnvelope(opts) {
+    _classCallCheck(this, ADSREnvelope);
 
-  if (!Array.isArray(paramList) || paramList.length === 0) {
-    paramList = [{}];
+    this._ = new _ADSRParams2["default"](opts);
   }
 
-  var filters = paramList.map(function (params) {
-    var filter = audioContext.createBiquadFilter();
+  _createClass(ADSREnvelope, [{
+    key: "valueAt",
+    value: function valueAt() {
+      var time = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
-    filter.type = utils.filterType(params.type, "peaking");
+      return this._.valueAt(time);
+    }
+  }, {
+    key: "applyTo",
+    value: function applyTo(audioParam, playbackTime) {
+      this.getWebAudioAPIMethods(playbackTime).forEach(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 3);
 
-    utils.setAudioParam(filter.frequency, utils.audioNode(params.frequency, 350));
-    utils.setAudioParam(filter.detune, utils.audioNode(params.detune, 0));
-    utils.setAudioParam(filter.Q, utils.audioNode(params.Q, 1));
-    utils.setAudioParam(filter.gain, utils.audioNode(params.gain, 0));
+        var method = _ref2[0];
+        var value = _ref2[1];
+        var time = _ref2[2];
 
-    return filter;
-  });
+        audioParam[method](value, time);
+      });
 
-  if (2 <= filters.length) {
-    (function () {
-      for (var i = 0, imax = filters.length - 1; i < imax; i++) {
-        filters[i].connect(filters[i + 1]);
-      }
+      return this;
+    }
+  }, {
+    key: "getWebAudioAPIMethods",
+    value: function getWebAudioAPIMethods() {
+      var playbackTime = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
-      var lastNode = filters[filters.length - 1];
+      return this._.methods(playbackTime);
+    }
+  }, {
+    key: "clone",
+    value: function clone() {
+      return new ADSREnvelope({
+        attackTime: this._.attackTime,
+        decayTime: this._.decayTime,
+        sustainLevel: this._.sustainLevel,
+        releaseTime: this._.releaseTime,
+        gateTime: this._.gateTime,
+        peakLevel: this._.peakLevel,
+        epsilon: this._.epsilon,
+        attackCurve: this._.attackCurve,
+        decayCurve: this._.decayCurve,
+        releaseCurve: this._.releaseCurve
+      });
+    }
+  }, {
+    key: "duration",
+    set: function set(value) {
+      this._.setDuration(value);
+    },
+    get: function get() {
+      return this._.duration;
+    }
+  }, {
+    key: "attackTime",
+    set: function set(value) {
+      this._.setAttackTime(value);
+    },
+    get: function get() {
+      return this._.attackTime;
+    }
+  }, {
+    key: "decayTime",
+    set: function set(value) {
+      this._.setDecayTime(value);
+    },
+    get: function get() {
+      return this._.decayTime;
+    }
+  }, {
+    key: "sustainTime",
+    set: function set(value) {
+      this._.setSustainTime(value);
+    },
+    get: function get() {
+      return this._.sustainTime;
+    }
+  }, {
+    key: "sustainLevel",
+    set: function set(value) {
+      this._.setSustainLevel(value);
+    },
+    get: function get() {
+      return this._.sustainLevel;
+    }
+  }, {
+    key: "releaseTime",
+    set: function set(value) {
+      this._.setReleaseTime(value);
+    },
+    get: function get() {
+      return this._.releaseTime;
+    }
+  }, {
+    key: "gateTime",
+    set: function set(value) {
+      this._.setGateTime(value);
+    },
+    get: function get() {
+      return this._.gateTime;
+    }
+  }, {
+    key: "peakLevel",
+    set: function set(value) {
+      this._.setPeakLevel(value);
+    },
+    get: function get() {
+      return this._.peakLevel;
+    }
+  }, {
+    key: "epsilon",
+    set: function set(value) {
+      this._.setEpsilon(value);
+    },
+    get: function get() {
+      return this._.epsilon;
+    }
+  }, {
+    key: "attackCurve",
+    set: function set(value) {
+      this._.setAttackCurve(value);
+    },
+    get: function get() {
+      return this._.attackCurve;
+    }
+  }, {
+    key: "decayCurve",
+    set: function set(value) {
+      this._.setDecayCurve(value);
+    },
+    get: function get() {
+      return this._.decayCurve;
+    }
+  }, {
+    key: "releaseCurve",
+    set: function set(value) {
+      this._.setReleaseCurve(value);
+    },
+    get: function get() {
+      return this._.releaseCurve;
+    }
+  }]);
 
-      filters[0].connect = function () {
-        lastNode.connect.apply(lastNode, arguments);
-      };
+  return ADSREnvelope;
+})();
 
-      filters[0].disconnect = function () {
-        lastNode.disconnect.apply(lastNode, arguments);
-      };
-    })();
-  }
-
-  filters[0].filters = filters;
-
-  return filters[0];
-};
-
-exports["default"] = EQ;
+exports["default"] = ADSREnvelope;
 module.exports = exports["default"];
-},{"./utils":4}],3:[function(require,module,exports){
+},{"./ADSRParams":3}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _mohayonaoUtilsDefaults = require("@mohayonao/utils/defaults");
+
+var _mohayonaoUtilsDefaults2 = _interopRequireDefault(_mohayonaoUtilsDefaults);
+
+var _mohayonaoUtilsConstrain = require("@mohayonao/utils/constrain");
+
+var _mohayonaoUtilsConstrain2 = _interopRequireDefault(_mohayonaoUtilsConstrain);
+
+var _EnvelopeBuilder = require("./EnvelopeBuilder");
+
+var _EnvelopeBuilder2 = _interopRequireDefault(_EnvelopeBuilder);
+
+var _EnvelopeValue = require("./EnvelopeValue");
+
+var _EnvelopeValue2 = _interopRequireDefault(_EnvelopeValue);
+
+var _defaultValues = require("./defaultValues");
+
+var _defaultValues2 = _interopRequireDefault(_defaultValues);
+
+var _constants = require("./constants");
+
+var EPSILON = 2.220446049250313e-16;
+
+var ADSRParams = (function () {
+  function ADSRParams() {
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    _classCallCheck(this, ADSRParams);
+
+    this.attackTime = time((0, _mohayonaoUtilsDefaults2["default"])(opts.attackTime, _defaultValues2["default"].attackTime));
+    this.decayTime = time((0, _mohayonaoUtilsDefaults2["default"])(opts.decayTime, _defaultValues2["default"].decayTime));
+    this.sustainLevel = level((0, _mohayonaoUtilsDefaults2["default"])(opts.sustainLevel, _defaultValues2["default"].sustainLevel));
+    this.releaseTime = time((0, _mohayonaoUtilsDefaults2["default"])(opts.releaseTime, _defaultValues2["default"].releaseTime));
+    this.peakLevel = time((0, _mohayonaoUtilsDefaults2["default"])(opts.peakLevel, _defaultValues2["default"].peakLevel));
+    this.epsilon = epsilon((0, _mohayonaoUtilsDefaults2["default"])(opts.epsilon, _defaultValues2["default"].epsilon));
+    this.attackCurve = curve((0, _mohayonaoUtilsDefaults2["default"])(opts.attackCurve, _defaultValues2["default"].attackCurve));
+    this.decayCurve = curve((0, _mohayonaoUtilsDefaults2["default"])(opts.decayCurve, _defaultValues2["default"].decayCurve));
+    this.releaseCurve = curve((0, _mohayonaoUtilsDefaults2["default"])(opts.releaseCurve, _defaultValues2["default"].releaseCurve));
+    this.gateTime = _defaultValues2["default"].gateTime;
+
+    if (isFiniteNumber(opts.sustainTime)) {
+      this.setSustainTime(opts.sustainTime);
+    }
+    if (isFiniteNumber(opts.gateTime)) {
+      this.setGateTime(opts.gateTime);
+    }
+    if (isFiniteNumber(opts.duration)) {
+      this.setDuration(opts.duration);
+    }
+
+    this.update();
+  }
+
+  _createClass(ADSRParams, [{
+    key: "valueAt",
+    value: function valueAt(time) {
+      return _EnvelopeValue2["default"].at(this.envelope, time);
+    }
+  }, {
+    key: "methods",
+    value: function methods(playbackTime) {
+      return this.envelope.map(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 3);
+
+        var type = _ref2[0];
+        var value = _ref2[1];
+        var time = _ref2[2];
+
+        return [method(type), value, playbackTime + time];
+      });
+    }
+  }, {
+    key: "setDuration",
+    value: function setDuration(value) {
+      var duration = time(value);
+
+      this.setGateTime(duration - this.releaseTime);
+    }
+  }, {
+    key: "setAttackTime",
+    value: function setAttackTime(value) {
+      this.attackTime = time(value);
+      this.update();
+    }
+  }, {
+    key: "setDecayTime",
+    value: function setDecayTime(value) {
+      this.decayTime = time(value);
+      this.update();
+    }
+  }, {
+    key: "setSustainTime",
+    value: function setSustainTime(value) {
+      var sustainTime = time(value);
+
+      this.setGateTime(this.attackTime + this.decayTime + sustainTime);
+    }
+  }, {
+    key: "setSustainLevel",
+    value: function setSustainLevel(value) {
+      this.sustainLevel = level(value);
+      this.update();
+    }
+  }, {
+    key: "setReleaseTime",
+    value: function setReleaseTime(value) {
+      this.releaseTime = time(value);
+      this.update();
+    }
+  }, {
+    key: "setGateTime",
+    value: function setGateTime(value) {
+      this.gateTime = time(value);
+      this.update();
+    }
+  }, {
+    key: "setPeakLevel",
+    value: function setPeakLevel(value) {
+      this.peakLevel = time(value);
+      this.update();
+    }
+  }, {
+    key: "setEpsilon",
+    value: function setEpsilon(value) {
+      this.epsilon = epsilon(value);
+      this.update();
+    }
+  }, {
+    key: "setAttackCurve",
+    value: function setAttackCurve(value) {
+      this.attackCurve = curve(value);
+      this.update();
+    }
+  }, {
+    key: "setDecayCurve",
+    value: function setDecayCurve(value) {
+      this.decayCurve = curve(value);
+      this.update();
+    }
+  }, {
+    key: "setReleaseCurve",
+    value: function setReleaseCurve(value) {
+      this.releaseCurve = curve(value);
+      this.update();
+    }
+  }, {
+    key: "update",
+    value: function update() {
+      this.sustainTime = Math.max(0, this.gateTime - this.attackTime - this.decayTime);
+      this.duration = this.gateTime + this.releaseTime;
+      this.envelope = _EnvelopeBuilder2["default"].build(this);
+    }
+  }]);
+
+  return ADSRParams;
+})();
+
+exports["default"] = ADSRParams;
+
+function isFiniteNumber(value) {
+  return typeof value === "number" && isFinite(value);
+}
+
+function time(value) {
+  return Math.max(0, value) || 0;
+}
+
+function level(value) {
+  return (0, _mohayonaoUtilsConstrain2["default"])(+value, 0, 1) || 0;
+}
+
+function epsilon(value) {
+  return (0, _mohayonaoUtilsConstrain2["default"])(+value, EPSILON, 1e-2) || 1e-3;
+}
+
+function curve(type) {
+  return type === "exp" ? "exp" : "lin";
+}
+
+function method(type) {
+  switch (type) {
+    case _constants.SET:
+      return "setValueAtTime";
+    case _constants.LIN:
+      return "linearRampToValueAtTime";
+    case _constants.EXP:
+      return "exponentialRampToValueAtTime";
+    default:
+    // do nothing
+  }
+}
+module.exports = exports["default"];
+},{"./EnvelopeBuilder":4,"./EnvelopeValue":6,"./constants":7,"./defaultValues":8,"@mohayonao/utils/constrain":16,"@mohayonao/utils/defaults":17}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -70,60 +392,615 @@ Object.defineProperty(exports, "__esModule", {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _EQ = require("./EQ");
+var _mohayonaoUtilsLinlin = require("@mohayonao/utils/linlin");
 
-var _EQ2 = _interopRequireDefault(_EQ);
+var _mohayonaoUtilsLinlin2 = _interopRequireDefault(_mohayonaoUtilsLinlin);
 
-exports["default"] = _EQ2["default"];
+var _mohayonaoUtilsLinexp = require("@mohayonao/utils/linexp");
+
+var _mohayonaoUtilsLinexp2 = _interopRequireDefault(_mohayonaoUtilsLinexp);
+
+var _constants = require("./constants");
+
+var _EnvelopeReducer = require("./EnvelopeReducer");
+
+var _EnvelopeReducer2 = _interopRequireDefault(_EnvelopeReducer);
+
+function build(params) {
+  var envelope = buildEnvelope(params);
+
+  envelope = _EnvelopeReducer2["default"].reduce(envelope);
+
+  return envelope;
+}
+
+function getCurveItems(curveType, epsilon) {
+  if (curveType === "exp") {
+    return { zero: epsilon, calc: _mohayonaoUtilsLinexp2["default"], type: _constants.EXP };
+  }
+  return { zero: 0, calc: _mohayonaoUtilsLinlin2["default"], type: _constants.LIN };
+}
+
+function buildEnvelope(params) {
+  var attackTime = params.attackTime;
+  var decayTime = params.decayTime;
+  var gateTime = params.gateTime;
+  var releaseTime = params.releaseTime;
+
+  var envType = 0;
+
+  envType += 0 < attackTime ? 4 : 0;
+  envType += 0 < decayTime ? 2 : 0;
+  envType += 0 < releaseTime ? 1 : 0;
+
+  switch (envType) {
+    case 0:
+      return buildSustainEnvelope(params);
+    case 1:
+      return buildSustainReleaseEnvelope(params);
+    case 2:
+      if (gateTime <= decayTime) {
+        return buildDecayEnvelope(params);
+      }
+      return buildDecaySustainEnvelope(params);
+    case 3:
+      if (gateTime <= decayTime) {
+        return buildDecayReleaseEnvelope(params);
+      }
+      return buildDecaySustainReleaseEnvelope(params);
+    case 4:
+      if (gateTime <= attackTime) {
+        return buildAttackEnvelope(params);
+      }
+      return buildAttackSustainEnvelope(params);
+    case 5:
+      if (gateTime <= attackTime) {
+        return buildAttackReleaseEnvelope(params);
+      }
+      return buildAttackSustainReleaseEnvelope(params);
+    case 6:
+      if (gateTime <= attackTime) {
+        return buildAttackEnvelope(params);
+      }
+      if (gateTime <= attackTime + decayTime) {
+        return buildAttackDecayEnvelope(params);
+      }
+      return buildAttackDecaySustainEnvelope(params);
+    case 7:
+      if (gateTime <= attackTime) {
+        return buildAttackReleaseEnvelope(params);
+      }
+      if (gateTime <= attackTime + decayTime) {
+        return buildAttackDecayReleaseEnvelope(params);
+      }
+      return buildAttackDecaySustainReleaseEnvelope(params);
+    default:
+    // do nothing
+  }
+}
+
+function buildSustainEnvelope(params) {
+  //
+  //
+  // ----------*
+  //           |
+  //           +---------
+  // 0         12
+  //
+  var result = [];
+  var t0 = 0;
+  var t1 = params.gateTime;
+  var t2 = params.gateTime;
+  var v0 = params.sustainLevel * params.peakLevel;
+  var v1 = params.sustainLevel * params.peakLevel;
+  var v2 = 0;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([_constants.SET, v1, t1]);
+  result.push([_constants.SET, v2, t2]);
+
+  return result;
+}
+
+function buildSustainReleaseEnvelope(params) {
+  //
+  //
+  // ----------*
+  //            \
+  //             +-------
+  // 0         1 2
+  var result = [];
+  var r = getCurveItems(params.releaseCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.gateTime;
+  var t2 = params.gateTime + params.releaseTime;
+  var v0 = Math.max(r.zero, params.sustainLevel * params.peakLevel);
+  var v1 = Math.max(r.zero, params.sustainLevel * params.peakLevel);
+  var v2 = r.zero;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([_constants.SET, v1, t1]);
+  result.push([r.type, v2, t2]);
+
+  return result;
+}
+
+function buildDecaySustainEnvelope(params) {
+  // +
+  //  \
+  //   +-------*
+  //           |
+  //           +---------
+  // 0 1       23
+  var result = [];
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.decayTime;
+  var t2 = params.gateTime;
+  var t3 = params.gateTime;
+  var v0 = Math.max(d.zero, params.peakLevel);
+  var v1 = Math.max(d.zero, params.sustainLevel * params.peakLevel);
+  var v2 = Math.max(d.zero, params.sustainLevel * params.peakLevel);
+  var v3 = 0;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([d.type, v1, t1]);
+  result.push([_constants.SET, v2, t2]);
+  result.push([_constants.SET, v3, t3]);
+
+  return result;
+}
+
+function buildDecayEnvelope(params) {
+  // +
+  //  \
+  //   *
+  //   |
+  //   +-----------------
+  // 0 12
+  var result = [];
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.gateTime;
+  var t2 = params.gateTime;
+  var v0 = Math.max(d.zero, params.peakLevel);
+  var vx = Math.max(d.zero, params.sustainLevel * params.peakLevel);
+  var v1 = d.calc(t1, 0, params.decayTime, v0, vx);
+  var v2 = 0;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([d.type, v1, t1]);
+  result.push([_constants.SET, v2, t2]);
+
+  return result;
+}
+
+function buildDecaySustainReleaseEnvelope(params) {
+  // +
+  //  \
+  //   +-------*
+  //            \
+  //             +-------
+  // 0 1       2 3
+  var result = [];
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var r = getCurveItems(params.releaseCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.decayTime;
+  var t2 = params.gateTime;
+  var t3 = params.gateTime + params.releaseTime;
+  var v0 = Math.max(d.zero, r.zero, params.peakLevel);
+  var v1 = Math.max(d.zero, r.zero, params.sustainLevel * params.peakLevel);
+  var v2 = Math.max(d.zero, r.zero, params.sustainLevel * params.peakLevel);
+  var v3 = r.zero;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([d.type, v1, t1]);
+  result.push([_constants.SET, v2, t2]);
+  result.push([r.type, v3, t3]);
+
+  return result;
+}
+
+function buildDecayReleaseEnvelope(params) {
+  // +
+  //  \
+  //   *
+  //    \
+  //     +---------------
+  // 0 1 2
+  var result = [];
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var r = getCurveItems(params.releaseCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.gateTime;
+  var t2 = params.gateTime + params.releaseTime;
+  var v0 = Math.max(d.zero, r.zero, params.peakLevel);
+  var vx = Math.max(d.zero, r.zero, params.sustainLevel * params.peakLevel);
+  var v1 = d.calc(t1, 0, params.decayTime, v0, vx);
+  var v2 = Math.max(d.zero, r.zero);
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([d.type, v1, t1]);
+  result.push([r.type, v2, t2]);
+
+  return result;
+}
+
+function buildAttackSustainEnvelope(params) {
+  //     +
+  //    /|
+  //   / +-----*
+  //  /        |
+  // +         +---------
+  // 0   12    34
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.attackTime;
+  var t2 = params.attackTime;
+  var t3 = params.gateTime;
+  var t4 = params.gateTime;
+  var v0 = a.zero;
+  var v1 = Math.max(a.zero, params.peakLevel);
+  var v2 = params.sustainLevel * params.peakLevel;
+  var v3 = params.sustainLevel * params.peakLevel;
+  var v4 = 0;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([_constants.SET, v2, t2]);
+  result.push([_constants.SET, v3, t3]);
+  result.push([_constants.SET, v4, t4]);
+
+  return result;
+}
+
+function buildAttackEnvelope(params) {
+  //
+  //
+  //   *
+  //  /|
+  // + +-----------------
+  // 0 12
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.gateTime;
+  var t2 = params.gateTime;
+  var v0 = a.zero;
+  var vx = Math.max(a.zero, params.peakLevel);
+  var v1 = a.calc(t1, 0, params.attackTime, v0, vx);
+  var v2 = 0;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([_constants.SET, v2, t2]);
+
+  return result;
+}
+
+function buildAttackSustainReleaseEnvelope(params) {
+  //     +
+  //    /|
+  //   / +-----*
+  //  /         \
+  // +           +-------
+  // 0   12    3 4
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var r = getCurveItems(params.releaseCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.attackTime;
+  var t2 = params.attackTime;
+  var t3 = params.gateTime;
+  var t4 = params.gateTime + params.releaseTime;
+  var v0 = a.zero;
+  var v1 = Math.max(a.zero, params.peakLevel);
+  var v2 = Math.max(r.zero, params.sustainLevel * params.peakLevel);
+  var v3 = Math.max(r.zero, params.sustainLevel * params.peakLevel);
+  var v4 = r.zero;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([_constants.SET, v2, t2]);
+  result.push([_constants.SET, v3, t3]);
+  result.push([r.type, v4, t4]);
+
+  return result;
+}
+
+function buildAttackReleaseEnvelope(params) {
+  //
+  //
+  //   *
+  //  / \
+  // +   +---------------
+  // 0 1 2
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var r = getCurveItems(params.releaseCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.gateTime;
+  var t2 = params.gateTime + params.releaseTime;
+  var v0 = a.zero;
+  var vx = Math.max(a.zero, params.peakLevel);
+  var v1 = a.calc(t1, 0, params.attackTime, v0, vx);
+  var v2 = r.zero;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([r.type, v2, t2]);
+
+  return result;
+}
+
+function buildAttackDecaySustainEnvelope(params) {
+  //     +
+  //    / \
+  //   /   +---*
+  //  /        |
+  // +         +---------
+  // 0   1 2   34
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.attackTime;
+  var t2 = params.attackTime + params.decayTime;
+  var t3 = params.gateTime;
+  var t4 = params.gateTime;
+  var v0 = a.zero;
+  var v1 = Math.max(a.zero, d.zero, params.peakLevel);
+  var v2 = Math.max(d.zero, params.sustainLevel * params.peakLevel);
+  var v3 = Math.max(d.zero, params.sustainLevel * params.peakLevel);
+  var v4 = 0;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([d.type, v2, t2]);
+  result.push([_constants.SET, v3, t3]);
+  result.push([_constants.SET, v4, t4]);
+
+  return result;
+}
+
+function buildAttackDecayEnvelope(params) {
+  //     +
+  //    / \
+  //   /   *
+  //  /    |
+  // +     +-------------
+  // 0   1 23
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.attackTime;
+  var t2 = params.gateTime;
+  var t3 = params.gateTime;
+  var v0 = a.zero;
+  var v1 = Math.max(a.zero, d.zero, params.peakLevel);
+  var vx = Math.max(d.zero, params.sustainLevel * params.peakLevel);
+  var v2 = d.calc(t2, params.attackTime, params.attackTime + params.decayTime, v1, vx);
+  var v3 = 0;
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([d.type, v2, t2]);
+  result.push([_constants.SET, v3, t3]);
+
+  return result;
+}
+
+function buildAttackDecaySustainReleaseEnvelope(params) {
+  //     +
+  //    / \
+  //   /   +---*
+  //  /         \
+  // +           +-------
+  // 0   1 2   3 4
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var r = getCurveItems(params.releaseCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.attackTime;
+  var t2 = params.attackTime + params.decayTime;
+  var t3 = params.gateTime;
+  var t4 = params.gateTime + params.releaseTime;
+  var v0 = a.zero;
+  var v1 = Math.max(a.zero, d.zero, params.peakLevel);
+  var v2 = Math.max(d.zero, r.zero, params.sustainLevel * params.peakLevel);
+  var v3 = Math.max(d.zero, r.zero, params.sustainLevel * params.peakLevel);
+  var v4 = Math.max(d.zero, r.zero);
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([d.type, v2, t2]);
+  result.push([_constants.SET, v3, t3]);
+  result.push([r.type, v4, t4]);
+
+  return result;
+}
+
+function buildAttackDecayReleaseEnvelope(params) {
+  //     +
+  //    / \
+  //   /   *
+  //  /     \
+  // +       +-----------
+  // 0   1 2 3
+  var result = [];
+  var a = getCurveItems(params.attackCurve, params.epsilon);
+  var d = getCurveItems(params.decayCurve, params.epsilon);
+  var r = getCurveItems(params.releaseCurve, params.epsilon);
+  var t0 = 0;
+  var t1 = params.attackTime;
+  var t2 = params.gateTime;
+  var t3 = params.gateTime + params.releaseTime;
+  var v0 = a.zero;
+  var v1 = Math.max(a.zero, d.zero, params.peakLevel);
+  var vx = Math.max(d.zero, params.sustainLevel * params.peakLevel);
+  var v2 = d.calc(t2, params.attackTime, params.attackTime + params.decayTime, v1, vx);
+  var v3 = Math.max(d.zero, r.zero);
+
+  result.push([_constants.SET, v0, t0]);
+  result.push([a.type, v1, t1]);
+  result.push([d.type, v2, t2]);
+  result.push([r.type, v3, t3]);
+
+  return result;
+}
+
+exports["default"] = { build: build };
 module.exports = exports["default"];
-},{"./EQ":2}],4:[function(require,module,exports){
-(function (global){
+},{"./EnvelopeReducer":5,"./constants":7,"@mohayonao/utils/linexp":18,"@mohayonao/utils/linlin":19}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.filterType = filterType;
-exports.audioNode = audioNode;
-exports.setAudioParam = setAudioParam;
 
-function filterType(type, defaultValue) {
-  return ({
-    lowpass: "lowpass",
-    highpass: "highpass",
-    bandpass: "bandpass",
-    lowshelf: "lowshelf",
-    highshelf: "highshelf",
-    peaking: "peaking",
-    notch: "notch",
-    allpass: "allpass",
-    lpf: "lowpass",
-    hpf: "highpass",
-    bpf: "bandpass",
-    apf: "allpass"
-  })[String(type).toLowerCase()] || defaultValue;
+var _constants = require("./constants");
+
+function reduce(envelope) {
+  envelope = envelope.filter(function (items) {
+    return isFinite(items[_constants.TIME]);
+  });
+
+  var changed = undefined;
+
+  do {
+    changed = false;
+
+    if (2 <= envelope.length) {
+      var a = envelope[envelope.length - 2];
+      var b = envelope[envelope.length - 1];
+
+      if (a[_constants.VALUE] === b[_constants.VALUE]) {
+        envelope.pop();
+      }
+    }
+
+    for (var i = envelope.length - 2; i >= 0; i--) {
+      var a = envelope[i];
+      var b = envelope[i + 1];
+
+      if (a[_constants.TYPE] === _constants.SET) {
+        if (b[_constants.TYPE] !== _constants.SET) {
+          if (a[_constants.VALUE] === b[_constants.VALUE] || a[_constants.TIME] === b[_constants.TIME]) {
+            b[_constants.TYPE] = _constants.SET;
+            changed = true;
+          }
+        } else if (a[_constants.TIME] === b[_constants.TIME]) {
+          envelope.splice(i, 1);
+          changed = true;
+        }
+      }
+    }
+  } while (changed && envelope.length);
+
+  return envelope;
 }
 
-function audioNode(node, defaultValue) {
-  if (node instanceof global.AudioNode) {
-    return node;
+exports["default"] = { reduce: reduce };
+module.exports = exports["default"];
+},{"./constants":7}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _mohayonaoUtilsLinlin = require("@mohayonao/utils/linlin");
+
+var _mohayonaoUtilsLinlin2 = _interopRequireDefault(_mohayonaoUtilsLinlin);
+
+var _mohayonaoUtilsLinexp = require("@mohayonao/utils/linexp");
+
+var _mohayonaoUtilsLinexp2 = _interopRequireDefault(_mohayonaoUtilsLinexp);
+
+var _constants = require("./constants");
+
+function at(envelope, time) {
+  for (var i = 0, imax = envelope.length - 1; i < imax; i++) {
+    var e0 = envelope[i];
+    var e1 = envelope[i + 1];
+
+    if (e0[_constants.TIME] <= time && time < e1[_constants.TIME]) {
+      switch (e1[_constants.TYPE]) {
+        case _constants.LIN:
+          return (0, _mohayonaoUtilsLinlin2["default"])(time, e0[_constants.TIME], e1[_constants.TIME], e0[_constants.VALUE], e1[_constants.VALUE]);
+        case _constants.EXP:
+          return (0, _mohayonaoUtilsLinexp2["default"])(time, e0[_constants.TIME], e1[_constants.TIME], e0[_constants.VALUE], e1[_constants.VALUE]);
+        default:
+          return e0[_constants.VALUE];
+      }
+    }
   }
-  if (typeof node === "number" && isFinite(node)) {
-    return node;
-  }
-  return defaultValue;
+
+  return envelope.length ? envelope[envelope.length - 1][_constants.VALUE] : 0;
 }
 
-function setAudioParam(audioParam, value) {
-  if (typeof value === "number") {
-    audioParam.value = value;
-  } else {
-    audioParam.value = 0;
-    value.connect(audioParam);
-  }
-}
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+exports["default"] = { at: at };
+module.exports = exports["default"];
+},{"./constants":7,"@mohayonao/utils/linexp":18,"@mohayonao/utils/linlin":19}],7:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var SET = 0;
+exports.SET = SET;
+var LIN = 1;
+exports.LIN = LIN;
+var EXP = 2;
+
+exports.EXP = EXP;
+var TYPE = 0;
+exports.TYPE = TYPE;
+var VALUE = 1;
+exports.VALUE = VALUE;
+var TIME = 2;
+exports.TIME = TIME;
+},{}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = {
+  attackTime: 0.01,
+  decayTime: 0.3,
+  sustainLevel: 0.5,
+  releaseTime: 1,
+  gateTime: 1,
+  peakLevel: 1,
+  epsilon: 1e-3,
+  attackCurve: "lin",
+  decayCurve: "lin",
+  releaseCurve: "lin"
+};
+module.exports = exports["default"];
+},{}],9:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _ADSREnvelope = require("./ADSREnvelope");
+
+var _ADSREnvelope2 = _interopRequireDefault(_ADSREnvelope);
+
+exports["default"] = _ADSREnvelope2["default"];
+module.exports = exports["default"];
+},{"./ADSREnvelope":2}],10:[function(require,module,exports){
 "use strict";
 
 var LISTENERS = typeof Symbol !== "undefined" ? Symbol("LISTENERS") : "_@mohayonao/event-emitter:listeners";
@@ -218,9 +1095,10 @@ EventEmitter.prototype.emit = function(event, arg1) {
 
 module.exports = EventEmitter;
 
-},{}],6:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 arguments[4][1][0].apply(exports,arguments)
-},{"./lib":8,"dup":1}],7:[function(require,module,exports){
+},{"./lib":14,"dup":1}],12:[function(require,module,exports){
+(function (global){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -229,270 +1107,198 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-require("@mohayonao/web-audio-utils/enableCustomAudioNode");
-
-var _symbols = require("./symbols");
-
-var FeedbackDelay = (function () {
-  function FeedbackDelay(audioContext) {
-    var maxDelayTime = arguments.length <= 1 || arguments[1] === undefined ? 1.0 : arguments[1];
-
-    _classCallCheck(this, FeedbackDelay);
-
-    this[_symbols.CONTEXT] = audioContext;
-    this[_symbols.DELAY] = audioContext.createDelay(maxDelayTime);
-    this[_symbols.FEEDBACK] = audioContext.createGain();
-
-    this[_symbols.DELAY].connect(this[_symbols.FEEDBACK]);
-    this[_symbols.FEEDBACK].connect(this[_symbols.DELAY]);
-  }
-
-  _createClass(FeedbackDelay, [{
-    key: "connect",
-    value: function connect() {
-      var _DELAY;
-
-      (_DELAY = this[_symbols.DELAY]).connect.apply(_DELAY, arguments);
-    }
-  }, {
-    key: "disconnect",
-    value: function disconnect() {
-      var _DELAY2;
-
-      (_DELAY2 = this[_symbols.DELAY]).disconnect.apply(_DELAY2, arguments);
-    }
-  }, {
-    key: "dispose",
-    value: function dispose() {
-      this[_symbols.DELAY].disconnect();
-      this[_symbols.FEEDBACK].disconnect();
-      this[_symbols.DELAY] = null;
-      this[_symbols.FEEDBACK] = null;
-    }
-  }, {
-    key: "__connectFrom",
-    value: function __connectFrom(source) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      source.connect.apply(source, [this[_symbols.DELAY]].concat(args));
-    }
-  }, {
-    key: "context",
-    get: function get() {
-      return this[_symbols.CONTEXT];
-    }
-  }, {
-    key: "delayTime",
-    get: function get() {
-      return this[_symbols.DELAY].delayTime;
-    }
-  }, {
-    key: "feedback",
-    get: function get() {
-      return this[_symbols.FEEDBACK].gain;
-    }
-  }]);
-
-  return FeedbackDelay;
-})();
-
-exports["default"] = FeedbackDelay;
-module.exports = exports["default"];
-},{"./symbols":9,"@mohayonao/web-audio-utils/enableCustomAudioNode":10}],8:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+var _get = function get(_x2, _x3, _x4) { var _again = true; _function: while (_again) { var object = _x2, property = _x3, receiver = _x4; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x2 = parent; _x3 = property; _x4 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _FeedbackDelay = require("./FeedbackDelay");
-
-var _FeedbackDelay2 = _interopRequireDefault(_FeedbackDelay);
-
-exports["default"] = _FeedbackDelay2["default"];
-module.exports = exports["default"];
-},{"./FeedbackDelay":7}],9:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var CONTEXT = typeof Symbol !== "undefined" ? Symbol("CONTEXT") : "@mohayonao/feedback-delay:CONTEXT";
-exports.CONTEXT = CONTEXT;
-var DELAY = typeof Symbol !== "undefined" ? Symbol("DELAY") : "@mohayonao/feedback-delay:DELAY";
-exports.DELAY = DELAY;
-var FEEDBACK = typeof Symbol !== "undefined" ? Symbol("FEEDBACK") : "@mohayonao/feedback-delay:FEEDBACK";
-exports.FEEDBACK = FEEDBACK;
-},{}],10:[function(require,module,exports){
-(function (global){
-var AudioNode = global.AudioNode;
-var AudioNode$connect;
-var AudioNode$disconnect;
-
-function connect() {
-  var args = Array.prototype.slice.call(arguments);
-
-  if (args.length && typeof args[0].__connectFrom === "function") {
-    args[0].__connectFrom.apply(args[0], [ this ].concat(args.slice(1)));
-  } else {
-    AudioNode$connect.apply(this, args);
-  }
-}
-
-function disconnect() {
-  var args = Array.prototype.slice.call(arguments);
-
-  if (args.length && typeof args[0].__disconnectFrom === "function") {
-    args[0].__disconnectFrom.apply(args[0], [ this ].concat(args.slice(1)));
-  } else {
-    AudioNode$disconnect.apply(this, args);
-  }
-}
-
-if (!global.__WebAudioUtils$enableCustomAudioNode) {
-  global.__WebAudioUtils$enableCustomAudioNode = true;
-
-  AudioNode$connect = AudioNode.prototype.connect;
-  AudioNode$disconnect = AudioNode.prototype.disconnect;
-
-  AudioNode.prototype.connect = connect;
-  AudioNode.prototype.disconnect = disconnect;
-}
-
-module.exports = function() {};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],11:[function(require,module,exports){
-arguments[4][1][0].apply(exports,arguments)
-},{"./lib":13,"dup":1}],12:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var OSCILLATOR = typeof Symbol !== "undefined" ? Symbol("OSCILLATOR") : "_@mohayonao/operator:OSCILLATOR";
-exports.OSCILLATOR = OSCILLATOR;
-var GAIN = typeof Symbol !== "undefined" ? Symbol("GAIN") : "_@mohayonao/operator:GAIN";
-exports.GAIN = GAIN;
-var ENVELOPES = typeof Symbol !== "undefined" ? Symbol("ENVELOPES") : "_@mohayonao/operator:ENVELOPES";
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-exports.ENVELOPES = ENVELOPES;
+var _mohayonaoEventEmitter = require("@mohayonao/event-emitter");
 
-var Operator = (function () {
-  function Operator(audioContext) {
-    _classCallCheck(this, Operator);
+var _mohayonaoEventEmitter2 = _interopRequireDefault(_mohayonaoEventEmitter);
 
-    this[OSCILLATOR] = audioContext.createOscillator();
-    this[GAIN] = audioContext.createGain();
-    this[ENVELOPES] = {};
+var _mohayonaoUtilsDefaults = require("@mohayonao/utils/defaults");
+
+var _mohayonaoUtilsDefaults2 = _interopRequireDefault(_mohayonaoUtilsDefaults);
+
+var _defaultContext = require("./defaultContext");
+
+var _defaultContext2 = _interopRequireDefault(_defaultContext);
+
+var Timeline = (function (_EventEmitter) {
+  _inherits(Timeline, _EventEmitter);
+
+  function Timeline() {
+    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    _classCallCheck(this, Timeline);
+
+    _get(Object.getPrototypeOf(Timeline.prototype), "constructor", this).call(this);
+
+    this.context = (0, _mohayonaoUtilsDefaults2["default"])(opts.context, _defaultContext2["default"]);
+    this.interval = (0, _mohayonaoUtilsDefaults2["default"])(opts.interval, 0.025);
+    this.aheadTime = (0, _mohayonaoUtilsDefaults2["default"])(opts.aheadTime, 0.1);
+    this.timerAPI = (0, _mohayonaoUtilsDefaults2["default"])(opts.timerAPI, global);
+    this.playbackTime = this.currentTime;
+
+    this._timerId = 0;
+    this._schedId = 0;
+    this._events = [];
   }
 
-  _createClass(Operator, [{
-    key: "connect",
-    value: function connect(destination) {
-      this[OSCILLATOR].connect(this[GAIN]);
-      this[GAIN].connect(destination);
-    }
-  }, {
-    key: "disconnect",
-    value: function disconnect() {
-      var _GAIN;
-
-      this[OSCILLATOR].disconnect();
-      (_GAIN = this[GAIN]).disconnect.apply(_GAIN, arguments);
-    }
-  }, {
+  _createClass(Timeline, [{
     key: "start",
-    value: function start(when) {
-      applyTo(this[ENVELOPES].frequency, this[OSCILLATOR].frequency, when);
-      applyTo(this[ENVELOPES].detune, this[OSCILLATOR].detune, when);
-      applyTo(this[ENVELOPES].gain, this[GAIN].gain, when);
-      this[OSCILLATOR].start(when);
+    value: function start(callback) {
+      var _this = this;
+
+      if (this._timerId === 0) {
+        this._timerId = this.timerAPI.setInterval(function () {
+          var t0 = _this.context.currentTime;
+          var t1 = t0 + _this.aheadTime;
+
+          _this._process(t0, t1);
+        }, this.interval * 1000);
+
+        this.emit("start");
+      }
+
+      if (callback) {
+        this.insert(this.context.currentTime, callback);
+      }
+
+      return this;
     }
   }, {
     key: "stop",
-    value: function stop(when) {
-      this[OSCILLATOR].stop(when);
-    }
-  }, {
-    key: "setPeriodicWave",
-    value: function setPeriodicWave(periodicWave) {
-      this[OSCILLATOR].setPeriodicWave(periodicWave);
-    }
-  }, {
-    key: "setEnvelope",
-    value: function setEnvelope(envelope) {
-      var target = arguments[1] === undefined ? "gain" : arguments[1];
+    value: function stop(reset) {
+      if (this._timerId !== 0) {
+        this.timerAPI.clearInterval(this._timerId);
+        this._timerId = 0;
 
-      this[ENVELOPES][target] = envelope;
-    }
-  }, {
-    key: "getEnvelope",
-    value: function getEnvelope() {
-      var target = arguments[0] === undefined ? "gain" : arguments[0];
+        this.emit("stop");
+      }
 
-      return this[ENVELOPES][target];
+      if (reset) {
+        this._events.splice(0);
+      }
+
+      return this;
     }
   }, {
-    key: "context",
-    get: function get() {
-      return this[OSCILLATOR].context;
+    key: "insert",
+    value: function insert(time, callback, args) {
+      var id = ++this._schedId;
+      var event = { id: id, time: time, callback: callback, args: args };
+      var events = this._events;
+
+      if (events.length === 0 || events[events.length - 1].time <= time) {
+        events.push(event);
+      } else {
+        for (var i = 0, imax = events.length; i < imax; i++) {
+          if (time < events[i].time) {
+            events.splice(i, 0, event);
+            break;
+          }
+        }
+      }
+
+      return id;
     }
   }, {
-    key: "type",
-    get: function get() {
-      return this[OSCILLATOR].type;
-    },
-    set: function set(value) {
-      this[OSCILLATOR].type = value;
+    key: "nextTick",
+    value: function nextTick(time, callback, args) {
+      if (typeof time === "function") {
+        args = callback;
+        callback = time;
+        time = this.playbackTime;
+      }
+
+      return this.insert(time + this.aheadTime, callback, args);
     }
   }, {
-    key: "frequency",
-    get: function get() {
-      return this[OSCILLATOR].frequency;
+    key: "remove",
+    value: function remove(schedId) {
+      var events = this._events;
+
+      if (typeof schedId === "number") {
+        for (var i = 0, imax = events.length; i < imax; i++) {
+          if (schedId === events[i].id) {
+            events.splice(i, 1);
+            break;
+          }
+        }
+      }
+
+      return schedId;
     }
   }, {
-    key: "detune",
-    get: function get() {
-      return this[OSCILLATOR].detune;
+    key: "removeAll",
+    value: function removeAll() {
+      this._events.splice(0);
     }
   }, {
-    key: "onended",
-    get: function get() {
-      return this[OSCILLATOR].onended;
-    },
-    set: function set(value) {
-      this[OSCILLATOR].onended = value;
+    key: "_process",
+    value: function _process(t0, t1) {
+      var events = this._events;
+
+      this.playbackTime = t0;
+      this.emit("process", { playbackTime: this.playbackTime });
+
+      while (events.length && events[0].time < t1) {
+        var _event = events.shift();
+        var playbackTime = _event.time;
+        var args = _event.args;
+
+        this.playbackTime = playbackTime;
+
+        _event.callback({ playbackTime: playbackTime, args: args });
+      }
+
+      this.playbackTime = t0;
+      this.emit("processed", { playbackTime: this.playbackTime });
     }
   }, {
-    key: "gain",
+    key: "state",
     get: function get() {
-      return this[GAIN].gain;
+      return this._timerId !== 0 ? "running" : "suspended";
+    }
+  }, {
+    key: "currentTime",
+    get: function get() {
+      return this.context.currentTime;
+    }
+  }, {
+    key: "events",
+    get: function get() {
+      return this._events.slice();
     }
   }]);
 
-  return Operator;
-})();
+  return Timeline;
+})(_mohayonaoEventEmitter2["default"]);
 
-exports["default"] = Operator;
+exports["default"] = Timeline;
+module.exports = exports["default"];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./defaultContext":13,"@mohayonao/event-emitter":10,"@mohayonao/utils/defaults":17}],13:[function(require,module,exports){
+"use strict";
 
-function applyTo(envelope, audioParam, startTime) {
-  if (envelope && typeof envelope.applyTo === "function") {
-    envelope.applyTo(audioParam, startTime);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = Object.defineProperties({}, {
+  currentTime: {
+    get: function get() {
+      return Date.now() / 1000;
+    },
+    configurable: true,
+    enumerable: true
   }
-}
-},{}],13:[function(require,module,exports){
+});
+module.exports = exports["default"];
+},{}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -501,18 +1307,150 @@ Object.defineProperty(exports, "__esModule", {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _Operator = require("./Operator");
+var _Timeline = require("./Timeline");
 
-var _Operator2 = _interopRequireDefault(_Operator);
+var _Timeline2 = _interopRequireDefault(_Timeline);
 
-exports["default"] = _Operator2["default"];
+exports["default"] = _Timeline2["default"];
 module.exports = exports["default"];
-},{"./Operator":12}],14:[function(require,module,exports){
-module.exports = function(midi) {
-  return 440 * Math.pow(2, (midi - 69) * 1 / 12);
+},{"./Timeline":12}],15:[function(require,module,exports){
+module.exports = function(array, target) {
+  var index = array.indexOf(target);
+
+  if (index !== -1) {
+    return false;
+  }
+
+  array.push(target);
+
+  return true;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
+module.exports = function(value, minValue, maxValue) {
+  return Math.max(minValue, Math.min(value, maxValue));
+};
+
+},{}],17:[function(require,module,exports){
+module.exports = function(value, defaultValue) {
+  return typeof value !== "undefined" ? value : defaultValue;
+};
+
+},{}],18:[function(require,module,exports){
+module.exports = function(value, inMin, inMax, outMin, outMax) {
+  return Math.pow(outMax / outMin, (value - inMin) / (inMax - inMin)) * outMin;
+};
+
+},{}],19:[function(require,module,exports){
+module.exports = function(value, inMin, inMax, outMin, outMax) {
+  return (value - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
+};
+
+},{}],20:[function(require,module,exports){
+module.exports = function(start, stop, step) {
+  var length, result;
+  var i;
+
+  if (typeof stop === "undefined") {
+    stop = start || 0;
+    start = 0;
+  }
+  step = step || 1;
+
+  length = Math.max(Math.ceil((stop - start) / step), 0);
+  result = Array(length);
+
+  for (i = 0; i < length; i++) {
+    result[i] = start;
+    start += step;
+  }
+
+  return result;
+};
+
+},{}],21:[function(require,module,exports){
+module.exports = function(array, target) {
+  var index = array.indexOf(target);
+
+  if (index === -1) {
+    return false;
+  }
+
+  array.splice(index, 1);
+
+  return true;
+};
+
+},{}],22:[function(require,module,exports){
+module.exports = function(array, rand) {
+  rand = rand || Math.random;
+
+  return array[(rand() * array.length)|0];
+};
+
+},{}],23:[function(require,module,exports){
+var appendIfNotExists = require("@mohayonao/utils/appendIfNotExists");
+var removeIfExists = require("@mohayonao/utils/removeIfExists");
+
+var memo = [];
+
+module.exports = {
+  append: function(node) {
+    appendIfNotExists(memo, node);
+  },
+  remove: function(node) {
+    removeIfExists(memo, node);
+  },
+  dispose: function() {
+    return memo.splice(0);
+  },
+};
+
+},{"@mohayonao/utils/appendIfNotExists":15,"@mohayonao/utils/removeIfExists":21}],24:[function(require,module,exports){
+(function (global){
+var getAudioContext = require("./getAudioContext");
+
+/* eslint-disable no-unused-vars */
+
+module.exports = function(audioContext, callback) {
+  var memo = null;
+
+  if (!("ontouchend" in global)) {
+    if (typeof callback === "function") {
+      setTimeout(callback, 0);
+    }
+    return audioContext;
+  }
+
+  audioContext = audioContext || getAudioContext();
+
+  function choreFunction() {
+    var bufSrc = audioContext.createBufferSource();
+    var buffer = audioContext.createBuffer(1, 128, audioContext.sampleRate);
+
+    bufSrc.buffer = buffer;
+    bufSrc.start(audioContext.currentTime);
+    bufSrc.stop(audioContext.currentTime + buffer.duration);
+    bufSrc.connect(audioContext.destination);
+    bufSrc.onended = function() {
+      bufSrc.disconnect();
+      memo = null;
+      if (typeof callback === "function") {
+        callback();
+      }
+    };
+    memo = bufSrc;
+
+    global.removeEventListener("touchend", choreFunction);
+  }
+
+  global.addEventListener("touchend", choreFunction);
+
+  return audioContext;
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./getAudioContext":26}],25:[function(require,module,exports){
 (function (global){
 var getAudioContext = require("./getAudioContext");
 
@@ -553,7 +1491,7 @@ module.exports = function(path, audioContext) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./getAudioContext":16}],16:[function(require,module,exports){
+},{"./getAudioContext":26}],26:[function(require,module,exports){
 (function (global){
 var audioContext = null;
 
@@ -572,7 +1510,54 @@ module.exports = function() {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
+var getAudioContext = require("./getAudioContext");
+
+module.exports = function(audioBuffer, n, audioContext) {
+  var numberOfChannels, channelData;
+  var result, length, start, end, startIndex, endIndex;
+  var subLength, subBuffer;
+  var i, j;
+
+  n |= 0;
+
+  if (n <= 0) {
+    return [];
+  }
+
+  audioContext = audioContext || getAudioContext();
+  numberOfChannels = audioBuffer.numberOfChannels;
+  channelData = new Array(numberOfChannels);
+
+  for (i = 0; i < numberOfChannels; i++) {
+    channelData[i] = audioBuffer.getChannelData(i);
+  }
+
+  result = new Array(n);
+  length = audioBuffer.length / n;
+  start = 0;
+  end = 0;
+
+  for (i = 0; i < n; i++) {
+    end = start + length;
+
+    startIndex = start|0;
+    endIndex = end|0;
+    subLength = endIndex - startIndex;
+    subBuffer = audioContext.createBuffer(audioBuffer.numberOfChannels, subLength, audioBuffer.sampleRate);
+
+    for (j = 0; j < numberOfChannels; j++) {
+      subBuffer.getChannelData(j).set(channelData[j].subarray(startIndex, endIndex));
+    }
+
+    result[i] = subBuffer;
+    start = end;
+  }
+
+  return result;
+};
+
+},{"./getAudioContext":26}],28:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -665,7 +1650,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],18:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -716,7 +1701,7 @@ exports.$addChild = function (opts, BaseCtor) {
   return child
 }
 
-},{"../util":79}],19:[function(require,module,exports){
+},{"../util":90}],30:[function(require,module,exports){
 var Watcher = require('../watcher')
 var Path = require('../parsers/path')
 var textParser = require('../parsers/text')
@@ -877,7 +1862,7 @@ exports.$log = function (path) {
   console.log(data)
 }
 
-},{"../parsers/directive":67,"../parsers/expression":68,"../parsers/path":69,"../parsers/text":71,"../watcher":83}],20:[function(require,module,exports){
+},{"../parsers/directive":78,"../parsers/expression":79,"../parsers/path":80,"../parsers/text":82,"../watcher":94}],31:[function(require,module,exports){
 var _ = require('../util')
 var transition = require('../transition')
 
@@ -1105,7 +2090,7 @@ function remove (el, vm, cb) {
   if (cb) cb()
 }
 
-},{"../transition":72,"../util":79}],21:[function(require,module,exports){
+},{"../transition":83,"../util":90}],32:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -1281,7 +2266,7 @@ function modifyListenerCount (vm, event, count) {
   }
 }
 
-},{"../util":79}],22:[function(require,module,exports){
+},{"../util":90}],33:[function(require,module,exports){
 var _ = require('../util')
 var config = require('../config')
 
@@ -1412,7 +2397,7 @@ config._assetTypes.forEach(function (type) {
   }
 })
 
-},{"../compiler":28,"../config":30,"../parsers/directive":67,"../parsers/expression":68,"../parsers/path":69,"../parsers/template":70,"../parsers/text":71,"../util":79}],23:[function(require,module,exports){
+},{"../compiler":39,"../config":41,"../parsers/directive":78,"../parsers/expression":79,"../parsers/path":80,"../parsers/template":81,"../parsers/text":82,"../util":90}],34:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -1484,7 +2469,7 @@ exports.$compile = function (el, host) {
 }
 
 }).call(this,require('_process'))
-},{"../compiler":28,"../util":79,"_process":17}],24:[function(require,module,exports){
+},{"../compiler":39,"../util":90,"_process":28}],35:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -1586,7 +2571,7 @@ exports.push = function (watcher) {
 }
 
 }).call(this,require('_process'))
-},{"./config":30,"./util":79,"_process":17}],25:[function(require,module,exports){
+},{"./config":41,"./util":90,"_process":28}],36:[function(require,module,exports){
 /**
  * A doubly linked list-based Least Recently Used (LRU)
  * cache. Will keep most recently used items while
@@ -1700,7 +2685,7 @@ p.get = function (key, returnEntry) {
 
 module.exports = Cache
 
-},{}],26:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var textParser = require('../parsers/text')
@@ -1887,7 +2872,7 @@ function getDefault (options) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../directives/prop":46,"../parsers/path":69,"../parsers/text":71,"../util":79,"_process":17}],27:[function(require,module,exports){
+},{"../config":41,"../directives/prop":57,"../parsers/path":80,"../parsers/text":82,"../util":90,"_process":28}],38:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compileProps = require('./compile-props')
@@ -2521,13 +3506,13 @@ function directiveComparator (a, b) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../directives/component":35,"../parsers/directive":67,"../parsers/template":70,"../parsers/text":71,"../util":79,"./compile-props":26,"_process":17}],28:[function(require,module,exports){
+},{"../config":41,"../directives/component":46,"../parsers/directive":78,"../parsers/template":81,"../parsers/text":82,"../util":90,"./compile-props":37,"_process":28}],39:[function(require,module,exports){
 var _ = require('../util')
 
 _.extend(exports, require('./compile'))
 _.extend(exports, require('./transclude'))
 
-},{"../util":79,"./compile":27,"./transclude":29}],29:[function(require,module,exports){
+},{"../util":90,"./compile":38,"./transclude":40}],40:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var config = require('../config')
@@ -2675,7 +3660,7 @@ function mergeAttrs (from, to) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../parsers/template":70,"../util":79,"_process":17}],30:[function(require,module,exports){
+},{"../config":41,"../parsers/template":81,"../util":90,"_process":28}],41:[function(require,module,exports){
 module.exports = {
 
   /**
@@ -2801,7 +3786,7 @@ Object.defineProperty(module.exports, 'delimiters', {
   }
 })
 
-},{}],31:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -3059,7 +4044,7 @@ Directive.prototype._teardown = function () {
 module.exports = Directive
 
 }).call(this,require('_process'))
-},{"./config":30,"./parsers/expression":68,"./parsers/text":71,"./util":79,"./watcher":83,"_process":17}],32:[function(require,module,exports){
+},{"./config":41,"./parsers/expression":79,"./parsers/text":82,"./util":90,"./watcher":94,"_process":28}],43:[function(require,module,exports){
 // xlink
 var xlinkNS = 'http://www.w3.org/1999/xlink'
 var xlinkRE = /^xlink:/
@@ -3120,7 +4105,7 @@ module.exports = {
   }
 }
 
-},{}],33:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 var _ = require('../util')
 var addClass = _.addClass
 var removeClass = _.removeClass
@@ -3192,7 +4177,7 @@ function stringToObject (value) {
   return res
 }
 
-},{"../util":79}],34:[function(require,module,exports){
+},{"../util":90}],45:[function(require,module,exports){
 var config = require('../config')
 
 module.exports = {
@@ -3204,7 +4189,7 @@ module.exports = {
   }
 }
 
-},{"../config":30}],35:[function(require,module,exports){
+},{"../config":41}],46:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var config = require('../config')
@@ -3552,7 +4537,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../parsers/template":70,"../util":79,"_process":17}],36:[function(require,module,exports){
+},{"../config":41,"../parsers/template":81,"../util":90,"_process":28}],47:[function(require,module,exports){
 module.exports = {
 
   isLiteral: true,
@@ -3566,7 +4551,7 @@ module.exports = {
   }
 }
 
-},{}],37:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 var _ = require('../util')
 var templateParser = require('../parsers/template')
 
@@ -3608,7 +4593,7 @@ module.exports = {
   }
 }
 
-},{"../parsers/template":70,"../util":79}],38:[function(require,module,exports){
+},{"../parsers/template":81,"../util":90}],49:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -3737,7 +4722,7 @@ function callDetach (child) {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../compiler":28,"../parsers/template":70,"../transition":72,"../util":79,"_process":17}],39:[function(require,module,exports){
+},{"../cache":36,"../compiler":39,"../parsers/template":81,"../transition":83,"../util":90,"_process":28}],50:[function(require,module,exports){
 // manipulation directives
 exports.text = require('./text')
 exports.html = require('./html')
@@ -3763,7 +4748,7 @@ exports['if'] = require('./if')
 exports._component = require('./component')
 exports._prop = require('./prop')
 
-},{"./attr":32,"./class":33,"./cloak":34,"./component":35,"./el":36,"./html":37,"./if":38,"./model":41,"./on":45,"./prop":46,"./ref":47,"./repeat":48,"./show":49,"./style":50,"./text":51,"./transition":52}],40:[function(require,module,exports){
+},{"./attr":43,"./class":44,"./cloak":45,"./component":46,"./el":47,"./html":48,"./if":49,"./model":52,"./on":56,"./prop":57,"./ref":58,"./repeat":59,"./show":60,"./style":61,"./text":62,"./transition":63}],51:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -3807,7 +4792,7 @@ module.exports = {
   }
 }
 
-},{"../../util":79}],41:[function(require,module,exports){
+},{"../../util":90}],52:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 
@@ -3893,7 +4878,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../../util":79,"./checkbox":40,"./radio":42,"./select":43,"./text":44,"_process":17}],42:[function(require,module,exports){
+},{"../../util":90,"./checkbox":51,"./radio":53,"./select":54,"./text":55,"_process":28}],53:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -3928,7 +4913,7 @@ module.exports = {
   }
 }
 
-},{"../../util":79}],43:[function(require,module,exports){
+},{"../../util":90}],54:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 var Watcher = require('../../watcher')
@@ -4168,7 +5153,7 @@ function indexOf (arr, val) {
 }
 
 }).call(this,require('_process'))
-},{"../../parsers/directive":67,"../../util":79,"../../watcher":83,"_process":17}],44:[function(require,module,exports){
+},{"../../parsers/directive":78,"../../util":90,"../../watcher":94,"_process":28}],55:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -4302,7 +5287,7 @@ module.exports = {
   }
 }
 
-},{"../../util":79}],45:[function(require,module,exports){
+},{"../../util":90}],56:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 
@@ -4365,7 +5350,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],46:[function(require,module,exports){
+},{"../util":90,"_process":28}],57:[function(require,module,exports){
 // NOTE: the prop internal directive is compiled and linked
 // during _initScope(), before the created hook is called.
 // The purpose is to make the initial prop values available
@@ -4429,7 +5414,7 @@ module.exports = {
   }
 }
 
-},{"../config":30,"../util":79,"../watcher":83}],47:[function(require,module,exports){
+},{"../config":41,"../util":90,"../watcher":94}],58:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 
@@ -4455,7 +5440,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],48:[function(require,module,exports){
+},{"../util":90,"_process":28}],59:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var config = require('../config')
@@ -5229,7 +6214,7 @@ function isPrimitive (value) {
 }
 
 }).call(this,require('_process'))
-},{"../compiler":28,"../config":30,"../parsers/expression":68,"../parsers/template":70,"../parsers/text":71,"../util":79,"_process":17}],49:[function(require,module,exports){
+},{"../compiler":39,"../config":41,"../parsers/expression":79,"../parsers/template":81,"../parsers/text":82,"../util":90,"_process":28}],60:[function(require,module,exports){
 var transition = require('../transition')
 
 module.exports = function (value) {
@@ -5239,7 +6224,7 @@ module.exports = function (value) {
   }, this.vm)
 }
 
-},{"../transition":72}],50:[function(require,module,exports){
+},{"../transition":83}],61:[function(require,module,exports){
 var _ = require('../util')
 var prefixes = ['-webkit-', '-moz-', '-ms-']
 var camelPrefixes = ['Webkit', 'Moz', 'ms']
@@ -5351,7 +6336,7 @@ function prefix (prop) {
   }
 }
 
-},{"../util":79}],51:[function(require,module,exports){
+},{"../util":90}],62:[function(require,module,exports){
 var _ = require('../util')
 
 module.exports = {
@@ -5367,7 +6352,7 @@ module.exports = {
   }
 }
 
-},{"../util":79}],52:[function(require,module,exports){
+},{"../util":90}],63:[function(require,module,exports){
 var _ = require('../util')
 var Transition = require('../transition/transition')
 
@@ -5395,7 +6380,7 @@ module.exports = {
   }
 }
 
-},{"../transition/transition":74,"../util":79}],53:[function(require,module,exports){
+},{"../transition/transition":85,"../util":90}],64:[function(require,module,exports){
 var _ = require('../util')
 var clone = require('../parsers/template').clone
 
@@ -5508,11 +6493,11 @@ function extractFragment (nodes, parent, main) {
   return frag
 }
 
-},{"../parsers/template":70,"../util":79}],54:[function(require,module,exports){
+},{"../parsers/template":81,"../util":90}],65:[function(require,module,exports){
 exports.content = require('./content')
 exports.partial = require('./partial')
 
-},{"./content":53,"./partial":55}],55:[function(require,module,exports){
+},{"./content":64,"./partial":66}],66:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var templateParser = require('../parsers/template')
@@ -5589,7 +6574,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../compiler":28,"../directives/if":38,"../parsers/template":70,"../parsers/text":71,"../util":79,"_process":17}],56:[function(require,module,exports){
+},{"../cache":36,"../compiler":39,"../directives/if":49,"../parsers/template":81,"../parsers/text":82,"../util":90,"_process":28}],67:[function(require,module,exports){
 var _ = require('../util')
 var Path = require('../parsers/path')
 
@@ -5688,7 +6673,7 @@ function contains (val, search) {
   }
 }
 
-},{"../parsers/path":69,"../util":79}],57:[function(require,module,exports){
+},{"../parsers/path":80,"../util":90}],68:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -5836,7 +6821,7 @@ exports.debounce = function (handler, delay) {
 
 _.extend(exports, require('./array-filters'))
 
-},{"../util":79,"./array-filters":56}],58:[function(require,module,exports){
+},{"../util":90,"./array-filters":67}],69:[function(require,module,exports){
 var _ = require('../util')
 var Directive = require('../directive')
 var compiler = require('../compiler')
@@ -6038,7 +7023,7 @@ exports._cleanup = function () {
   this.$off()
 }
 
-},{"../compiler":28,"../directive":31,"../util":79}],59:[function(require,module,exports){
+},{"../compiler":39,"../directive":42,"../util":90}],70:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var inDoc = _.inDoc
@@ -6181,7 +7166,7 @@ exports._callHook = function (hook) {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],60:[function(require,module,exports){
+},{"../util":90,"_process":28}],71:[function(require,module,exports){
 var mergeOptions = require('../util').mergeOptions
 
 /**
@@ -6272,7 +7257,7 @@ exports._init = function (options) {
   }
 }
 
-},{"../util":79}],61:[function(require,module,exports){
+},{"../util":90}],72:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 
@@ -6369,7 +7354,7 @@ exports._resolveComponent = function (id, cb) {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],62:[function(require,module,exports){
+},{"../util":90,"_process":28}],73:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -6655,7 +7640,7 @@ exports._defineMeta = function (key, value) {
 }
 
 }).call(this,require('_process'))
-},{"../compiler":28,"../observer":65,"../observer/dep":64,"../util":79,"../watcher":83,"_process":17}],63:[function(require,module,exports){
+},{"../compiler":39,"../observer":76,"../observer/dep":75,"../util":90,"../watcher":94,"_process":28}],74:[function(require,module,exports){
 var _ = require('../util')
 var arrayProto = Array.prototype
 var arrayMethods = Object.create(arrayProto)
@@ -6755,7 +7740,7 @@ _.define(
 
 module.exports = arrayMethods
 
-},{"../util":79}],64:[function(require,module,exports){
+},{"../util":90}],75:[function(require,module,exports){
 var _ = require('../util')
 var uid = 0
 
@@ -6818,7 +7803,7 @@ Dep.prototype.notify = function () {
 
 module.exports = Dep
 
-},{"../util":79}],65:[function(require,module,exports){
+},{"../util":90}],76:[function(require,module,exports){
 var _ = require('../util')
 var config = require('../config')
 var Dep = require('./dep')
@@ -7054,7 +8039,7 @@ function copyAugment (target, src, keys) {
 
 module.exports = Observer
 
-},{"../config":30,"../util":79,"./array":63,"./dep":64,"./object":66}],66:[function(require,module,exports){
+},{"../config":41,"../util":90,"./array":74,"./dep":75,"./object":77}],77:[function(require,module,exports){
 var _ = require('../util')
 var objProto = Object.prototype
 
@@ -7138,7 +8123,7 @@ _.define(
   }
 )
 
-},{"../util":79}],67:[function(require,module,exports){
+},{"../util":90}],78:[function(require,module,exports){
 var _ = require('../util')
 var Cache = require('../cache')
 var cache = new Cache(1000)
@@ -7320,7 +8305,7 @@ exports.parse = function (s) {
   return dirs
 }
 
-},{"../cache":25,"../util":79}],68:[function(require,module,exports){
+},{"../cache":36,"../util":90}],79:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var Path = require('./path')
@@ -7588,7 +8573,7 @@ exports.isSimplePath = function (exp) {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../util":79,"./path":69,"_process":17}],69:[function(require,module,exports){
+},{"../cache":36,"../util":90,"./path":80,"_process":28}],80:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var Cache = require('../cache')
@@ -7940,7 +8925,7 @@ function warnNonExistent (path) {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../util":79,"_process":17}],70:[function(require,module,exports){
+},{"../cache":36,"../util":90,"_process":28}],81:[function(require,module,exports){
 var _ = require('../util')
 var Cache = require('../cache')
 var templateCache = new Cache(1000)
@@ -8230,7 +9215,7 @@ exports.parse = function (template, clone, noSelector) {
     : frag
 }
 
-},{"../cache":25,"../util":79}],71:[function(require,module,exports){
+},{"../cache":36,"../util":90}],82:[function(require,module,exports){
 var Cache = require('../cache')
 var config = require('../config')
 var dirParser = require('./directive')
@@ -8410,7 +9395,7 @@ function inlineFilters (exp, single) {
   }
 }
 
-},{"../cache":25,"../config":30,"./directive":67}],72:[function(require,module,exports){
+},{"../cache":36,"../config":41,"./directive":78}],83:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -8540,7 +9525,7 @@ var apply = exports.apply = function (el, direction, op, vm, cb) {
   transition[action](op, cb)
 }
 
-},{"../util":79}],73:[function(require,module,exports){
+},{"../util":90}],84:[function(require,module,exports){
 var _ = require('../util')
 var queue = []
 var queued = false
@@ -8577,7 +9562,7 @@ function flush () {
   return f
 }
 
-},{"../util":79}],74:[function(require,module,exports){
+},{"../util":90}],85:[function(require,module,exports){
 var _ = require('../util')
 var queue = require('./queue')
 var addClass = _.addClass
@@ -8936,7 +9921,7 @@ function isHidden (el) {
 
 module.exports = Transition
 
-},{"../util":79,"./queue":73}],75:[function(require,module,exports){
+},{"../util":90,"./queue":84}],86:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 
@@ -9064,7 +10049,7 @@ function formatValue (val) {
 }
 
 }).call(this,require('_process'))
-},{"./index":79,"_process":17}],76:[function(require,module,exports){
+},{"./index":90,"_process":28}],87:[function(require,module,exports){
 (function (process){
 /**
  * Enable debug utilities.
@@ -9132,7 +10117,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"_process":17}],77:[function(require,module,exports){
+},{"../config":41,"_process":28}],88:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 var config = require('../config')
@@ -9408,7 +10393,7 @@ exports.createAnchor = function (content, persist) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"./index":79,"_process":17}],78:[function(require,module,exports){
+},{"../config":41,"./index":90,"_process":28}],89:[function(require,module,exports){
 // can we use __proto__?
 exports.hasProto = '__proto__' in {}
 
@@ -9495,7 +10480,7 @@ exports.nextTick = (function () {
   }
 })()
 
-},{}],79:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 var lang = require('./lang')
 var extend = lang.extend
 
@@ -9506,7 +10491,7 @@ extend(exports, require('./options'))
 extend(exports, require('./component'))
 extend(exports, require('./debug'))
 
-},{"./component":75,"./debug":76,"./dom":77,"./env":78,"./lang":80,"./options":81}],80:[function(require,module,exports){
+},{"./component":86,"./debug":87,"./dom":88,"./env":89,"./lang":91,"./options":92}],91:[function(require,module,exports){
 /**
  * Check if a string starts with $ or _
  *
@@ -9818,7 +10803,7 @@ exports.looseEqual = function (a, b) {
   /* eslint-enable eqeqeq */
 }
 
-},{}],81:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 var config = require('../config')
@@ -10179,7 +11164,7 @@ exports.resolveAsset = function resolve (options, type, id) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"./index":79,"_process":17}],82:[function(require,module,exports){
+},{"../config":41,"./index":90,"_process":28}],93:[function(require,module,exports){
 var _ = require('./util')
 var extend = _.extend
 
@@ -10270,7 +11255,7 @@ extend(p, require('./api/lifecycle'))
 
 module.exports = _.Vue = Vue
 
-},{"./api/child":18,"./api/data":19,"./api/dom":20,"./api/events":21,"./api/global":22,"./api/lifecycle":23,"./directives":39,"./element-directives":54,"./filters":57,"./instance/compile":58,"./instance/events":59,"./instance/init":60,"./instance/misc":61,"./instance/scope":62,"./util":79}],83:[function(require,module,exports){
+},{"./api/child":29,"./api/data":30,"./api/dom":31,"./api/events":32,"./api/global":33,"./api/lifecycle":34,"./directives":50,"./element-directives":65,"./filters":68,"./instance/compile":69,"./instance/events":70,"./instance/init":71,"./instance/misc":72,"./instance/scope":73,"./util":90}],94:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -10586,7 +11571,74 @@ function traverse (obj) {
 module.exports = Watcher
 
 }).call(this,require('_process'))
-},{"./batcher":24,"./config":30,"./observer/dep":64,"./parsers/expression":68,"./util":79,"_process":17}],84:[function(require,module,exports){
+},{"./batcher":35,"./config":41,"./observer/dep":75,"./parsers/expression":79,"./util":90,"_process":28}],95:[function(require,module,exports){
+(function (global){
+"use strict";
+
+if (!(global === global.window && global.URL && global.Blob && global.Worker)) {
+  module.exports = global;
+} else {
+  module.exports = (function() {
+    var TIMER_WORKER_SOURCE = [
+      "var timerIds = {}, _ = {};",
+      "_.setInterval = function(args) {",
+      "  timerIds[args.timerId] = setInterval(function() { postMessage(args.timerId); }, args.delay);",
+      "};",
+      "_.clearInterval = function(args) {",
+      "  clearInterval(timerIds[args.timerId]);",
+      "};",
+      "_.setTimeout = function(args) {",
+      "  timerIds[args.timerId] = setTimeout(function() { postMessage(args.timerId); }, args.delay);",
+      "};",
+      "_.clearTimeout = function(args) {",
+      "  clearTimeout(timerIds[args.timerId]);",
+      "};",
+      "onmessage = function(e) { _[e.data.type](e.data) };"
+    ].join("");
+
+    var _timerId = 0;
+    var _callbacks = {};
+    var _timer = new global.Worker(global.URL.createObjectURL(
+      new global.Blob([ TIMER_WORKER_SOURCE ], { type: "text/javascript" })
+    ));
+
+    _timer.onmessage = function(e) {
+      if (_callbacks[e.data]) {
+        _callbacks[e.data]();
+      }
+    };
+
+    return {
+      setInterval: function(callback, delay) {
+        _timerId += 1;
+
+        _timer.postMessage({ type: "setInterval", timerId: _timerId, delay: delay });
+        _callbacks[_timerId] = callback;
+
+        return _timerId;
+      },
+      setTimeout: function(callback, delay) {
+        _timerId += 1;
+
+        _timer.postMessage({ type: "setTimeout", timerId: _timerId, delay: delay });
+        _callbacks[_timerId] = callback;
+
+        return _timerId;
+      },
+      clearInterval: function(timerId) {
+        _timer.postMessage({ type: "clearInterval", timerId: timerId });
+        _callbacks[timerId] = null;
+      },
+      clearTimeout: function(timerId) {
+        _timer.postMessage({ type: "clearTimeout", timerId: timerId });
+        _callbacks[timerId] = null;
+      }
+    };
+  })();
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],96:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10607,21 +11659,56 @@ var _mohayonaoEventEmitter = require("@mohayonao/event-emitter");
 
 var _mohayonaoEventEmitter2 = _interopRequireDefault(_mohayonaoEventEmitter);
 
+var _mohayonaoTimeline = require("@mohayonao/timeline");
+
+var _mohayonaoTimeline2 = _interopRequireDefault(_mohayonaoTimeline);
+
+var _mohayonaoAdsrEnvelope = require("@mohayonao/adsr-envelope");
+
+var _mohayonaoAdsrEnvelope2 = _interopRequireDefault(_mohayonaoAdsrEnvelope);
+
+var _workerTimer = require("worker-timer");
+
+var _workerTimer2 = _interopRequireDefault(_workerTimer);
+
+var _Track = require("./Track");
+
+var _Track2 = _interopRequireDefault(_Track);
+
 var _mohayonaoWebAudioUtilsGetAudioContext = require("@mohayonao/web-audio-utils/getAudioContext");
 
 var _mohayonaoWebAudioUtilsGetAudioContext2 = _interopRequireDefault(_mohayonaoWebAudioUtilsGetAudioContext);
+
+var _mohayonaoWebAudioUtilsEnableMobileAutoPlay = require("@mohayonao/web-audio-utils/enableMobileAutoPlay");
+
+var _mohayonaoWebAudioUtilsEnableMobileAutoPlay2 = _interopRequireDefault(_mohayonaoWebAudioUtilsEnableMobileAutoPlay);
 
 var _mohayonaoWebAudioUtilsFetchAudioBuffer = require("@mohayonao/web-audio-utils/fetchAudioBuffer");
 
 var _mohayonaoWebAudioUtilsFetchAudioBuffer2 = _interopRequireDefault(_mohayonaoWebAudioUtilsFetchAudioBuffer);
 
-var _mohayonaoUtilsMidicps = require("@mohayonao/utils/midicps");
+var _mohayonaoWebAudioUtilsSplitAudioBuffer = require("@mohayonao/web-audio-utils/splitAudioBuffer");
 
-var _mohayonaoUtilsMidicps2 = _interopRequireDefault(_mohayonaoUtilsMidicps);
+var _mohayonaoWebAudioUtilsSplitAudioBuffer2 = _interopRequireDefault(_mohayonaoWebAudioUtilsSplitAudioBuffer);
 
-var _SQEfx = require("./SQEfx");
+var _mohayonaoWebAudioUtilsGCGuard = require("@mohayonao/web-audio-utils/GCGuard");
 
-var _SQEfx2 = _interopRequireDefault(_SQEfx);
+var _mohayonaoWebAudioUtilsGCGuard2 = _interopRequireDefault(_mohayonaoWebAudioUtilsGCGuard);
+
+var _mohayonaoUtilsRange = require("@mohayonao/utils/range");
+
+var _mohayonaoUtilsRange2 = _interopRequireDefault(_mohayonaoUtilsRange);
+
+var _mohayonaoUtilsSample = require("@mohayonao/utils/sample");
+
+var _mohayonaoUtilsSample2 = _interopRequireDefault(_mohayonaoUtilsSample);
+
+var _mohayonaoUtilsRemoveIfExists = require("@mohayonao/utils/removeIfExists");
+
+var _mohayonaoUtilsRemoveIfExists2 = _interopRequireDefault(_mohayonaoUtilsRemoveIfExists);
+
+var INTERVAL = 100;
+var NUM_OF_INLETS = 8;
 
 var Player = (function (_EventEmitter) {
   _inherits(Player, _EventEmitter);
@@ -10633,12 +11720,33 @@ var Player = (function (_EventEmitter) {
 
     _get(Object.getPrototypeOf(Player.prototype), "constructor", this).call(this);
 
-    this.audioContext = (0, _mohayonaoWebAudioUtilsGetAudioContext2["default"])();
+    this.audioContext = (0, _mohayonaoWebAudioUtilsEnableMobileAutoPlay2["default"])((0, _mohayonaoWebAudioUtilsGetAudioContext2["default"])());
+    this.timeline = new _mohayonaoTimeline2["default"]({ context: this.audioContext, timerAPI: _workerTimer2["default"] });
+
+    this.outlet = this.audioContext.createGain();
+    this.inlets = (0, _mohayonaoUtilsRange2["default"])(NUM_OF_INLETS).map(function (i) {
+      var pan = _this.audioContext.createPanner();
+      var x = Math.sin(i / NUM_OF_INLETS * Math.PI * 2) * 0.5;
+      var y = 0;
+      var z = Math.cos(i / NUM_OF_INLETS * Math.PI * 2) * 0.25;
+
+      pan.panningModel = "equalpower";
+      pan.setPosition(x, y, z);
+
+      pan.connect(_this.outlet);
+
+      return pan;
+    });
+    this.outlet.connect(this.audioContext.destination);
+
+    this.tracks = [];
+
+    this.$onProcess = this.$onProcess.bind(this);
 
     Promise.all([(0, _mohayonaoWebAudioUtilsFetchAudioBuffer2["default"])("./assets/source.wav").then(function (audioBuffer) {
-      _this.source = audioBuffer;
-    }), (0, _mohayonaoWebAudioUtilsFetchAudioBuffer2["default"])("./assets/reverb.wav").then(function (audioBuffer) {
-      _this.reverb = audioBuffer;
+      var n = Math.floor(audioBuffer.duration / 1);
+
+      _this.buffers = (0, _mohayonaoWebAudioUtilsSplitAudioBuffer2["default"])(audioBuffer, n);
     })]).then(function () {
       _this.emit("ready");
     });
@@ -10647,31 +11755,82 @@ var Player = (function (_EventEmitter) {
   _createClass(Player, [{
     key: "start",
     value: function start() {
-      this.buf = this.audioContext.createBufferSource();
-      this.efx = new _SQEfx2["default"](this.audioContext);
-
-      this.buf.buffer = this.source;
-      this.buf.loop = true;
-      this.buf.start(this.audioContext.currentTime);
-      this.buf.connect(this.efx);
-
-      this.efx.comb.delayTime.value = 0.005;
-      this.efx.comb.feedback.value = 0.9;
-      this.efx.outGain0.gain.value = 0.5;
-      this.efx.outGain1.gain.value = 0.8;
-      this.efx.outGain2.gain.value = 1;
-      this.efx.reverb = this.reverb;
-      this.efx.connect(this.audioContext.destination);
+      this.tracks = [];
+      this.timeline.start(this.$onProcess);
     }
   }, {
     key: "stop",
     value: function stop() {
-      this.buf.stop(this.audioContext.currentTime);
-      this.buf.disconnect();
-      this.efx.dispose();
-      this.buf = null;
-      this.efx = null;
-      this.conv = null;
+      this.tracks = [];
+      this.timeline.stop(true);
+    }
+  }, {
+    key: "play",
+    value: function play(playbackTime) {
+      var bufSrc = this.audioContext.createBufferSource();
+      var gain = this.audioContext.createGain();
+      var buffer = (0, _mohayonaoUtilsSample2["default"])(this.buffers);
+      var duration = buffer.duration;
+      var t0 = playbackTime;
+      var t1 = t0 + duration;
+      var envelope = new _mohayonaoAdsrEnvelope2["default"]({
+        attackTime: 0.1,
+        decayTime: 0,
+        sustainLevel: 1,
+        releaseTime: 0.1,
+        duration: duration
+      });
+
+      bufSrc.buffer = buffer;
+      bufSrc.start(t0);
+      bufSrc.stop(t1);
+      bufSrc.connect(gain);
+
+      envelope.applyTo(gain.gain, t0);
+      gain.connect((0, _mohayonaoUtilsSample2["default"])(this.inlets));
+
+      this.timeline.nextTick(t1, function () {
+        bufSrc.disconnect();
+        gain.disconnect();
+      });
+    }
+  }, {
+    key: "appendTrack",
+    value: function appendTrack() {
+      var _this2 = this;
+
+      var track = new _Track2["default"]();
+
+      track.on("bang", function (_ref) {
+        var playbackTime = _ref.playbackTime;
+
+        _this2.play(playbackTime + 0.25);
+      });
+      track.on("loop", function () {
+        if (_this2.tracks.length < 10 && Math.random() < 0.2) {
+          _this2.appendTrack();
+        }
+        if (Math.random() < 0.1) {
+          (0, _mohayonaoUtilsRemoveIfExists2["default"])(_this2.tracks, track);
+        }
+      });
+
+      this.tracks.push(track);
+    }
+  }, {
+    key: "$onProcess",
+    value: function $onProcess(_ref2) {
+      var playbackTime = _ref2.playbackTime;
+
+      if (this.tracks.length === 0) {
+        this.appendTrack();
+      }
+
+      this.tracks.forEach(function (track) {
+        track.$onProcess(playbackTime, INTERVAL);
+      });
+
+      this.timeline.insert(playbackTime + INTERVAL * 0.001, this.$onProcess);
     }
   }]);
 
@@ -10681,7 +11840,7 @@ var Player = (function (_EventEmitter) {
 exports["default"] = Player;
 module.exports = exports["default"];
 
-},{"./SQEfx":85,"@mohayonao/event-emitter":5,"@mohayonao/utils/midicps":14,"@mohayonao/web-audio-utils/fetchAudioBuffer":15,"@mohayonao/web-audio-utils/getAudioContext":16}],85:[function(require,module,exports){
+},{"./Track":97,"@mohayonao/adsr-envelope":1,"@mohayonao/event-emitter":10,"@mohayonao/timeline":11,"@mohayonao/utils/range":20,"@mohayonao/utils/removeIfExists":21,"@mohayonao/utils/sample":22,"@mohayonao/web-audio-utils/GCGuard":23,"@mohayonao/web-audio-utils/enableMobileAutoPlay":24,"@mohayonao/web-audio-utils/fetchAudioBuffer":25,"@mohayonao/web-audio-utils/getAudioContext":26,"@mohayonao/web-audio-utils/splitAudioBuffer":27,"worker-timer":95}],97:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10690,110 +11849,73 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _mohayonaoFeedbackDelay = require("@mohayonao/feedback-delay");
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _mohayonaoFeedbackDelay2 = _interopRequireDefault(_mohayonaoFeedbackDelay);
+var _mohayonaoEventEmitter = require("@mohayonao/event-emitter");
 
-var _mohayonaoOperator = require("@mohayonao/operator");
+var _mohayonaoEventEmitter2 = _interopRequireDefault(_mohayonaoEventEmitter);
 
-var _mohayonaoOperator2 = _interopRequireDefault(_mohayonaoOperator);
+var _mohayonaoUtilsSample = require("@mohayonao/utils/sample");
 
-var _mohayonaoEq = require("@mohayonao/eq");
+var _mohayonaoUtilsSample2 = _interopRequireDefault(_mohayonaoUtilsSample);
 
-var _mohayonaoEq2 = _interopRequireDefault(_mohayonaoEq);
+var _mohayonaoUtilsRange = require("@mohayonao/utils/range");
 
-var SQEfx = (function () {
-  function SQEfx(audioContext) {
-    _classCallCheck(this, SQEfx);
+var _mohayonaoUtilsRange2 = _interopRequireDefault(_mohayonaoUtilsRange);
 
-    this.context = audioContext;
+var Track = (function (_EventEmitter) {
+  _inherits(Track, _EventEmitter);
 
-    this.outlet = this.context.createGain();
-    this.inGain0 = this.context.createGain();
-    this.inGain1 = this.context.createGain();
-    this.inGain2 = this.context.createGain();
-    this.outGain0 = this.context.createGain();
-    this.outGain1 = this.context.createGain();
-    this.outGain2 = this.context.createGain();
+  function Track() {
+    _classCallCheck(this, Track);
 
-    this.inGain0.connect(this.outGain0);
+    _get(Object.getPrototypeOf(Track.prototype), "constructor", this).call(this);
 
-    this.comb = new _mohayonaoFeedbackDelay2["default"](this.context);
-    this.inGain1.connect(this.comb);
-    this.comb.connect(this.outGain1);
-
-    this.conv = this.context.createConvolver();
-
-    // { frequency: 518.33, gain: 30, Q: 14.103 },
-    // { frequency: 533.49, gain: 30, Q: 12.126 },
-    // { frequency: 662.42, gain: 30, Q: 40 },
-    // { frequency: 673.16, gain: 28.19, Q: 40 },
-    // { frequency: 1050.98, gain: 30, Q: 40 },
-    // { frequency: 1368.8, gain: 30, Q: 40 },
-    // { frequency: 1648.9, gain: 30, Q: 40 },
-    // { frequency: 1672, gain: 25.12, Q: 40 },
-    // { type: "hpf", frequency: 86.957, Q: 0.025 },
-    // { type: "lpf", frequency: 2296.3, Q: 0.9 },
-
-    this.eq = new _mohayonaoEq2["default"](this.context, [{ frequency: 518.33, gain: 25, Q: 6.24 }, { frequency: 533.49, gain: 25, Q: 5.309 }, { frequency: 662.42, gain: 25, Q: 26.699 }, { frequency: 673.16, gain: 28.19, Q: 26.699 }, { frequency: 1050.98, gain: 30, Q: 26.699 }, { frequency: 1368.8, gain: 45, Q: 26.699 }, { frequency: 1648.9, gain: 25, Q: 26.699 }, { frequency: 1672, gain: 25.12, Q: 26.699 }, { type: "hpf", frequency: 86.957, Q: 0.025 }, { type: "lpf", frequency: 2296.3, Q: 5.9 }]);
-    this.inGain2.connect(this.eq);
-    this.eq.connect(this.outGain2);
-
-    this.outGain1.connect(this.eq);
-
-    this.outGain0.connect(this.outlet);
-    this.outGain1.connect(this.conv);
-    this.outGain2.connect(this.conv);
-
-    this.conv.connect(this.outlet);
+    this.interval = (0, _mohayonaoUtilsSample2["default"])([229, 269, 347]);
+    this.pattern = (0, _mohayonaoUtilsRange2["default"])(8).map(function (_) {
+      return 0.4 < Math.random();
+    });
+    this.index = 0;
+    this.ticks = this.interval;
   }
 
-  _createClass(SQEfx, [{
-    key: "connect",
-    value: function connect() {
-      var _outlet;
+  _createClass(Track, [{
+    key: "$onProcess",
+    value: function $onProcess(playbackTime, numOfTicks) {
+      this.ticks -= numOfTicks;
 
-      (_outlet = this.outlet).connect.apply(_outlet, arguments);
-    }
-  }, {
-    key: "disconnect",
-    value: function disconnect() {
-      var _outlet2;
+      while (this.ticks <= 0) {
+        var bang = this.pattern[this.index++];
 
-      (_outlet2 = this.outlet).disconnect.apply(_outlet2, arguments);
-    }
-  }, {
-    key: "dispose",
-    value: function dispose() {}
-  }, {
-    key: "__connectFrom",
-    value: function __connectFrom(source) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+        if (bang) {
+          this.emit("bang", {
+            playbackTime: playbackTime
+          });
+        }
+
+        if (this.index === this.pattern.length) {
+          this.emit("loop", this);
+          this.index = 0;
+        }
+
+        this.ticks += this.interval;
       }
-
-      source.connect.apply(source, [this.inGain0].concat(args));
-      source.connect.apply(source, [this.inGain1].concat(args));
-      source.connect.apply(source, [this.inGain2].concat(args));
-    }
-  }, {
-    key: "reverb",
-    set: function set(audioBuffer) {
-      this.conv.buffer = audioBuffer;
     }
   }]);
 
-  return SQEfx;
-})();
+  return Track;
+})(_mohayonaoEventEmitter2["default"]);
 
-exports["default"] = SQEfx;
+exports["default"] = Track;
 module.exports = exports["default"];
 
-},{"@mohayonao/eq":1,"@mohayonao/feedback-delay":6,"@mohayonao/operator":11}],86:[function(require,module,exports){
+},{"@mohayonao/event-emitter":10,"@mohayonao/utils/range":20,"@mohayonao/utils/sample":22}],98:[function(require,module,exports){
 "use strict";
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -10806,30 +11928,33 @@ var _Player = require("./Player");
 
 var _Player2 = _interopRequireDefault(_Player);
 
-window.addEventListener("DOMContentLoaded", function () {
+window.onload = function () {
   var player = new _Player2["default"]();
 
   var app = new _vue2["default"]({
     el: "#app",
     data: {
-      state: "ready"
+      isReady: false,
+      isPlaying: false
     },
     methods: {
       onClick: function onClick() {
-        if (this.state === "suspended") {
+        if (!this.isReady) {
+          return;
+        }
+        this.isPlaying = !this.isPlaying;
+        if (this.isPlaying) {
           player.start();
-          this.state = "playing";
-        } else if (this.state === "playing") {
+        } else {
           player.stop();
-          this.state = "suspended";
         }
       }
     }
   });
 
   player.on("ready", function () {
-    app.state = "suspended";
+    app.isReady = true;
   });
-});
+};
 
-},{"./Player":84,"vue":82}]},{},[86]);
+},{"./Player":96,"vue":93}]},{},[98]);

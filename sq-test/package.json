@@ -2,10 +2,9 @@
   "name": "sq-test",
   "version": "0.0.0",
   "dependencies": {
+    "@mohayonao/adsr-envelope": "^0.2.0",
     "@mohayonao/eq": "^0.1.0",
     "@mohayonao/event-emitter": "^1.0.1",
-    "@mohayonao/feedback-delay": "^0.1.0",
-    "@mohayonao/operator": "^0.1.4",
     "@mohayonao/timeline": "^0.3.0",
     "@mohayonao/utils": "^0.3.0",
     "@mohayonao/web-audio-utils": "^0.7.0",
@@ -15,10 +14,10 @@
   "devDependencies": {
     "babel": "^5.8.23",
     "babelify": "^6.3.0",
-    "browserify": "^11.2.0",
-    "watchify": "^3.4.0"
+    "browserify": "^11.0.1",
+    "watchify": "^3.3.1"
   },
-  "homepage": "http://mohayonao.github.io/draft/sq-test/",
+  "homepage": "http://mohayonao.github.io/draft/eq-test/",
   "private": true,
   "repository": {
     "type": "git",

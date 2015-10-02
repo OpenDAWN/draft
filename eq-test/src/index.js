@@ -1,31 +1,28 @@
 import Vue from "vue";
 import Player from "./Player";
 
-window.onload = () => {
+window.addEventListener("DOMContentLoaded", () => {
   let player = new Player();
 
   let app = new Vue({
     el: "#app",
     data: {
-      isReady: false,
-      isPlaying: false,
+      state: "ready",
     },
     methods: {
       onClick() {
-        if (!this.isReady) {
-          return;
-        }
-        this.isPlaying = !this.isPlaying;
-        if (this.isPlaying) {
+        if (this.state === "suspended") {
           player.start();
-        } else {
+          this.state = "playing";
+        } else if (this.state === "playing") {
           player.stop();
+          this.state = "suspended";
         }
-      },
-    }
+      }
+    },
   });
 
   player.on("ready", () => {
-    app.isReady = true;
+    app.state = "suspended";
   });
-};
+});
