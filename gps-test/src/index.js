@@ -60,6 +60,10 @@ global.onload = () => {
             }
           }, (e) => {
             this.guess = `ERROR: ${e}`;
+          }, {
+            enableHighAccuracy: true,
+            timeout: Infinity,
+            maximumAge: 0,
           });
         }
       },

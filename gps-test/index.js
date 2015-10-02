@@ -66,6 +66,10 @@ global.onload = function () {
             }
           }, function (e) {
             _this.guess = "ERROR: " + e;
+          }, {
+            enableHighAccuracy: true,
+            timeout: Infinity,
+            maximumAge: 0
           });
         }
       }
