@@ -1,4 +1,4 @@
-import CombFilter from "./CombFilter";
+import FeedbackDelay from "@mohayonao/feedback-delay";
 import Operator from "@mohayonao/operator";
 import EQ from "@mohayonao/eq";
 
@@ -16,7 +16,7 @@ export default class SQEfx {
 
     this.inGain0.connect(this.outGain0);
 
-    this.comb = new CombFilter(this.context);
+    this.comb = new FeedbackDelay(this.context);
     this.inGain1.connect(this.comb);
     this.comb.connect(this.outGain1);
 

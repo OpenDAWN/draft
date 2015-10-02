@@ -31,10 +31,10 @@ export default class Player extends EventEmitter {
     this.buf.start(this.audioContext.currentTime);
     this.buf.connect(this.efx);
 
-    this.efx.comb.delayTime.value = 0.25;
+    this.efx.comb.delayTime.value = 0.005;
     this.efx.comb.feedback.value = 0.9;
     this.efx.outGain0.gain.value = 0.5;
-    this.efx.outGain1.gain.value = 0.1;
+    this.efx.outGain1.gain.value = 0.8;
     this.efx.outGain2.gain.value = 1;
     this.efx.reverb = this.reverb;
     this.efx.connect(this.audioContext.destination);

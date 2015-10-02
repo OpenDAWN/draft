@@ -4,6 +4,7 @@
   "dependencies": {
     "@mohayonao/eq": "^0.1.0",
     "@mohayonao/event-emitter": "^1.0.1",
+    "@mohayonao/feedback-delay": "^0.1.0",
     "@mohayonao/operator": "^0.1.4",
     "@mohayonao/timeline": "^0.3.0",
     "@mohayonao/utils": "^0.3.0",
