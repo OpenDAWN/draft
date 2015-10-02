@@ -1,21 +1,19 @@
 import EventEmitter from "@mohayonao/event-emitter";
 import Timeline from "@mohayonao/timeline";
+import ADSREnvelope from "@mohayonao/adsr-envelope";
 import WorkerTimer from "worker-timer";
-import EQ from "@mohayonao/eq";
 import Track from "./Track";
 import getAudioContext from "@mohayonao/web-audio-utils/getAudioContext";
 import enableMobileAutoPlay from "@mohayonao/web-audio-utils/enableMobileAutoPlay";
 import fetchAudioBuffer from "@mohayonao/web-audio-utils/fetchAudioBuffer";
+import splitAudioBuffer from "@mohayonao/web-audio-utils/splitAudioBuffer";
 import GCGuard from "@mohayonao/web-audio-utils/GCGuard";
-import removeIfExists from "@mohayonao/utils/removeIfExists";
-import dbamp from "@mohayonao/utils/dbamp";
 import range from "@mohayonao/utils/range";
 import sample from "@mohayonao/utils/sample";
+import removeIfExists from "@mohayonao/utils/removeIfExists";
 
 const INTERVAL = 100;
 const NUM_OF_INLETS = 8;
-
-let instance = null;
 
 export default class Player extends EventEmitter {
   constructor() {
@@ -24,22 +22,8 @@ export default class Player extends EventEmitter {
     this.audioContext = enableMobileAutoPlay(getAudioContext());
     this.timeline = new Timeline({ context: this.audioContext, timerAPI: WorkerTimer });
 
-    this.outlet = this.audioContext.createConvolver();
-    this.outlet.connect(this.audioContext.destination);
-
+    this.outlet = this.audioContext.createGain();
     this.inlets = range(NUM_OF_INLETS).map((i) => {
-      let eq = new EQ(this.audioContext, [
-        { frequency: 518.33, gain: 30, Q: 14.103 },
-        { frequency: 533.49, gain: 30, Q: 12.126 },
-        { frequency: 662.42, gain: 30, Q: 40 },
-        { frequency: 673.16, gain: 28.19, Q: 40 },
-        { frequency: 1050.98, gain: 30, Q: 40 },
-        { frequency: 1368.8, gain: 30, Q: 40 },
-        { frequency: 1648.9, gain: 30, Q: 40 },
-        { frequency: 1672, gain: 25.12, Q: 40 },
-        { type: "hpf", frequency: 86.957, Q: 0.025 },
-        { type: "lpf", frequency: 2296.3, Q: 0.9 },
-      ]);
       let pan = this.audioContext.createPanner();
       let x = Math.sin((i / NUM_OF_INLETS) * Math.PI * 2) * 0.5;
       let y = 0;
@@ -48,22 +32,24 @@ export default class Player extends EventEmitter {
       pan.panningModel = "equalpower";
       pan.setPosition(x, y, z);
 
-      eq.connect(pan);
       pan.connect(this.outlet);
 
-      return eq;
+      return pan;
     });
+    this.outlet.connect(this.audioContext.destination);
 
     this.tracks = [];
 
     this.$onProcess = this.$onProcess.bind(this);
 
-    fetchAudioBuffer("./assets/01.wav", this.audioContext).then((audioBuffer) => {
-      this.audioBuffer = audioBuffer;
-      fetchAudioBuffer("./assets/reverb.wav", this.audioContext).then((audioBuffer) => {
-        this.outlet.buffer = audioBuffer;
-        this.emit("ready");
-      });
+    Promise.all([
+      fetchAudioBuffer("./assets/source.wav").then((audioBuffer) => {
+        let n = Math.floor(audioBuffer.duration / 1);
+
+        this.buffers = splitAudioBuffer(audioBuffer, n);
+      }),
+    ]).then(() => {
+      this.emit("ready");
     });
   }
 
@@ -78,35 +64,32 @@ export default class Player extends EventEmitter {
   }
 
   play(playbackTime) {
-    let bufSrc1 = this.audioContext.createBufferSource();
-    let bufSrc2 = this.audioContext.createBufferSource();
+    let bufSrc = this.audioContext.createBufferSource();
     let gain = this.audioContext.createGain();
+    let buffer = sample(this.buffers);
+    let duration = buffer.duration;
+    let t0 = playbackTime;
+    let t1 = t0 + duration;
+    let envelope = new ADSREnvelope({
+      attackTime: 0.1,
+      decayTime: 0,
+      sustainLevel: 1,
+      releaseTime: 0.1,
+      duration: duration,
+    });
 
-    bufSrc1.buffer = this.audioBuffer;
-    bufSrc1.start(playbackTime);
-    bufSrc1.connect(sample(this.inlets));
+    bufSrc.buffer = buffer;
+    bufSrc.start(t0);
+    bufSrc.stop(t1);
+    bufSrc.connect(gain);
 
-    bufSrc1.onended = () => {
-      bufSrc1.stop(this.audioContext.currentTime);
-      bufSrc1.disconnect();
-      GCGuard.remove(bufSrc1);
-    };
-    GCGuard.append(bufSrc1);
+    envelope.applyTo(gain.gain, t0);
+    gain.connect(sample(this.inlets));
 
-    bufSrc2.buffer = this.audioBuffer;
-    bufSrc2.start(playbackTime);
-    bufSrc2.connect(gain);
-
-    bufSrc2.onended = () => {
-      bufSrc2.stop(this.audioContext.currentTime);
-      bufSrc2.disconnect();
+    this.timeline.nextTick(t1, () => {
+      bufSrc.disconnect();
       gain.disconnect();
-      GCGuard.remove(bufSrc2);
-    };
-    GCGuard.append(bufSrc2);
-
-    gain.gain.value = Math.pow(2, -4);
-    gain.connect(this.audioContext.destination);
+    });
   }
 
   appendTrack() {
@@ -137,12 +120,5 @@ export default class Player extends EventEmitter {
     });
 
     this.timeline.insert(playbackTime + INTERVAL * 0.001, this.$onProcess);
-  }
-
-  static getInstance() {
-    if (instance === null) {
-      instance = new Player();
-    }
-    return instance;
   }
 }

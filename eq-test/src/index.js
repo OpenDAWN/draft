@@ -1,7 +1,8 @@
+import Vue from "vue";
 import Player from "./Player";
 
 window.onload = () => {
-  let player = Player.getInstance();
+  let player = new Player();
 
   let app = new Vue({
     el: "#app",

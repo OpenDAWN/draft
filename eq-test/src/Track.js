@@ -6,7 +6,7 @@ export default class Track extends EventEmitter {
   constructor() {
     super();
 
-    this.interval = sample([ 50, 125, 160, 205, 235 ]);
+    this.interval = sample([ 229, 269, 347 ]);
     this.pattern = range(8).map(_ => 0.4 < Math.random());
     this.index = 0;
     this.ticks = this.interval;
