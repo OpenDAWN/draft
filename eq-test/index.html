@@ -17,6 +17,20 @@
           <button class="btn {{ state === 'playing' ? 'btn-success' : 'btn-default' }}" v-on="click:onClick">{{ state === "ready" ? "LOADING..." : "PREVIEW" }}</button>
         </div>
       </div>
+      <table class="table">
+        <tr>
+          <th>Index</th>
+          <th>frequency</th>
+          <th>Q</th>
+          <th>gain</th>
+        </tr>
+        <tr v-repeat="params">
+          <td>{{ $index }}</td>
+          <td>{{ $value[0].toFixed(3) }}</td>
+          <td>{{ $value[1].toFixed(3) }}</td>
+          <td>{{ $value[2].toFixed(3) }}</td>
+        </tr>
+      </table>
     </div>
   </div>
   <script src="./index.js"></script>

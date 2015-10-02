@@ -4,6 +4,8 @@ import fetchAudioBuffer from "@mohayonao/web-audio-utils/fetchAudioBuffer";
 import midicps from "@mohayonao/utils/midicps";
 import SQEfx from "./SQEfx";
 
+let instance = null;
+
 export default class Player extends EventEmitter {
   constructor() {
     super();
@@ -47,5 +49,12 @@ export default class Player extends EventEmitter {
     this.buf = null;
     this.efx = null;
     this.conv = null;
+  }
+
+  static getInstance() {
+    if (instance === null) {
+      instance = new Player();
+    }
+    return instance;
   }
 }

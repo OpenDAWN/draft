@@ -508,11 +508,21 @@ var _Operator2 = _interopRequireDefault(_Operator);
 exports["default"] = _Operator2["default"];
 module.exports = exports["default"];
 },{"./Operator":12}],14:[function(require,module,exports){
+module.exports = function(value, inMin, inMax, outMin, outMax) {
+  return Math.pow(outMax / outMin, (value - inMin) / (inMax - inMin)) * outMin;
+};
+
+},{}],15:[function(require,module,exports){
+module.exports = function(value, inMin, inMax, outMin, outMax) {
+  return (value - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
+};
+
+},{}],16:[function(require,module,exports){
 module.exports = function(midi) {
   return 440 * Math.pow(2, (midi - 69) * 1 / 12);
 };
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 var getAudioContext = require("./getAudioContext");
 
@@ -553,7 +563,7 @@ module.exports = function(path, audioContext) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./getAudioContext":16}],16:[function(require,module,exports){
+},{"./getAudioContext":18}],18:[function(require,module,exports){
 (function (global){
 var audioContext = null;
 
@@ -572,7 +582,7 @@ module.exports = function() {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -665,7 +675,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -716,7 +726,7 @@ exports.$addChild = function (opts, BaseCtor) {
   return child
 }
 
-},{"../util":79}],19:[function(require,module,exports){
+},{"../util":81}],21:[function(require,module,exports){
 var Watcher = require('../watcher')
 var Path = require('../parsers/path')
 var textParser = require('../parsers/text')
@@ -877,7 +887,7 @@ exports.$log = function (path) {
   console.log(data)
 }
 
-},{"../parsers/directive":67,"../parsers/expression":68,"../parsers/path":69,"../parsers/text":71,"../watcher":83}],20:[function(require,module,exports){
+},{"../parsers/directive":69,"../parsers/expression":70,"../parsers/path":71,"../parsers/text":73,"../watcher":85}],22:[function(require,module,exports){
 var _ = require('../util')
 var transition = require('../transition')
 
@@ -1105,7 +1115,7 @@ function remove (el, vm, cb) {
   if (cb) cb()
 }
 
-},{"../transition":72,"../util":79}],21:[function(require,module,exports){
+},{"../transition":74,"../util":81}],23:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -1281,7 +1291,7 @@ function modifyListenerCount (vm, event, count) {
   }
 }
 
-},{"../util":79}],22:[function(require,module,exports){
+},{"../util":81}],24:[function(require,module,exports){
 var _ = require('../util')
 var config = require('../config')
 
@@ -1412,7 +1422,7 @@ config._assetTypes.forEach(function (type) {
   }
 })
 
-},{"../compiler":28,"../config":30,"../parsers/directive":67,"../parsers/expression":68,"../parsers/path":69,"../parsers/template":70,"../parsers/text":71,"../util":79}],23:[function(require,module,exports){
+},{"../compiler":30,"../config":32,"../parsers/directive":69,"../parsers/expression":70,"../parsers/path":71,"../parsers/template":72,"../parsers/text":73,"../util":81}],25:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -1484,7 +1494,7 @@ exports.$compile = function (el, host) {
 }
 
 }).call(this,require('_process'))
-},{"../compiler":28,"../util":79,"_process":17}],24:[function(require,module,exports){
+},{"../compiler":30,"../util":81,"_process":19}],26:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -1586,7 +1596,7 @@ exports.push = function (watcher) {
 }
 
 }).call(this,require('_process'))
-},{"./config":30,"./util":79,"_process":17}],25:[function(require,module,exports){
+},{"./config":32,"./util":81,"_process":19}],27:[function(require,module,exports){
 /**
  * A doubly linked list-based Least Recently Used (LRU)
  * cache. Will keep most recently used items while
@@ -1700,7 +1710,7 @@ p.get = function (key, returnEntry) {
 
 module.exports = Cache
 
-},{}],26:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var textParser = require('../parsers/text')
@@ -1887,7 +1897,7 @@ function getDefault (options) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../directives/prop":46,"../parsers/path":69,"../parsers/text":71,"../util":79,"_process":17}],27:[function(require,module,exports){
+},{"../config":32,"../directives/prop":48,"../parsers/path":71,"../parsers/text":73,"../util":81,"_process":19}],29:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compileProps = require('./compile-props')
@@ -2521,13 +2531,13 @@ function directiveComparator (a, b) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../directives/component":35,"../parsers/directive":67,"../parsers/template":70,"../parsers/text":71,"../util":79,"./compile-props":26,"_process":17}],28:[function(require,module,exports){
+},{"../config":32,"../directives/component":37,"../parsers/directive":69,"../parsers/template":72,"../parsers/text":73,"../util":81,"./compile-props":28,"_process":19}],30:[function(require,module,exports){
 var _ = require('../util')
 
 _.extend(exports, require('./compile'))
 _.extend(exports, require('./transclude'))
 
-},{"../util":79,"./compile":27,"./transclude":29}],29:[function(require,module,exports){
+},{"../util":81,"./compile":29,"./transclude":31}],31:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var config = require('../config')
@@ -2675,7 +2685,7 @@ function mergeAttrs (from, to) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../parsers/template":70,"../util":79,"_process":17}],30:[function(require,module,exports){
+},{"../config":32,"../parsers/template":72,"../util":81,"_process":19}],32:[function(require,module,exports){
 module.exports = {
 
   /**
@@ -2801,7 +2811,7 @@ Object.defineProperty(module.exports, 'delimiters', {
   }
 })
 
-},{}],31:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -3059,7 +3069,7 @@ Directive.prototype._teardown = function () {
 module.exports = Directive
 
 }).call(this,require('_process'))
-},{"./config":30,"./parsers/expression":68,"./parsers/text":71,"./util":79,"./watcher":83,"_process":17}],32:[function(require,module,exports){
+},{"./config":32,"./parsers/expression":70,"./parsers/text":73,"./util":81,"./watcher":85,"_process":19}],34:[function(require,module,exports){
 // xlink
 var xlinkNS = 'http://www.w3.org/1999/xlink'
 var xlinkRE = /^xlink:/
@@ -3120,7 +3130,7 @@ module.exports = {
   }
 }
 
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 var _ = require('../util')
 var addClass = _.addClass
 var removeClass = _.removeClass
@@ -3192,7 +3202,7 @@ function stringToObject (value) {
   return res
 }
 
-},{"../util":79}],34:[function(require,module,exports){
+},{"../util":81}],36:[function(require,module,exports){
 var config = require('../config')
 
 module.exports = {
@@ -3204,7 +3214,7 @@ module.exports = {
   }
 }
 
-},{"../config":30}],35:[function(require,module,exports){
+},{"../config":32}],37:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var config = require('../config')
@@ -3552,7 +3562,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"../parsers/template":70,"../util":79,"_process":17}],36:[function(require,module,exports){
+},{"../config":32,"../parsers/template":72,"../util":81,"_process":19}],38:[function(require,module,exports){
 module.exports = {
 
   isLiteral: true,
@@ -3566,7 +3576,7 @@ module.exports = {
   }
 }
 
-},{}],37:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var _ = require('../util')
 var templateParser = require('../parsers/template')
 
@@ -3608,7 +3618,7 @@ module.exports = {
   }
 }
 
-},{"../parsers/template":70,"../util":79}],38:[function(require,module,exports){
+},{"../parsers/template":72,"../util":81}],40:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -3737,7 +3747,7 @@ function callDetach (child) {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../compiler":28,"../parsers/template":70,"../transition":72,"../util":79,"_process":17}],39:[function(require,module,exports){
+},{"../cache":27,"../compiler":30,"../parsers/template":72,"../transition":74,"../util":81,"_process":19}],41:[function(require,module,exports){
 // manipulation directives
 exports.text = require('./text')
 exports.html = require('./html')
@@ -3763,7 +3773,7 @@ exports['if'] = require('./if')
 exports._component = require('./component')
 exports._prop = require('./prop')
 
-},{"./attr":32,"./class":33,"./cloak":34,"./component":35,"./el":36,"./html":37,"./if":38,"./model":41,"./on":45,"./prop":46,"./ref":47,"./repeat":48,"./show":49,"./style":50,"./text":51,"./transition":52}],40:[function(require,module,exports){
+},{"./attr":34,"./class":35,"./cloak":36,"./component":37,"./el":38,"./html":39,"./if":40,"./model":43,"./on":47,"./prop":48,"./ref":49,"./repeat":50,"./show":51,"./style":52,"./text":53,"./transition":54}],42:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -3807,7 +3817,7 @@ module.exports = {
   }
 }
 
-},{"../../util":79}],41:[function(require,module,exports){
+},{"../../util":81}],43:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 
@@ -3893,7 +3903,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../../util":79,"./checkbox":40,"./radio":42,"./select":43,"./text":44,"_process":17}],42:[function(require,module,exports){
+},{"../../util":81,"./checkbox":42,"./radio":44,"./select":45,"./text":46,"_process":19}],44:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -3928,7 +3938,7 @@ module.exports = {
   }
 }
 
-},{"../../util":79}],43:[function(require,module,exports){
+},{"../../util":81}],45:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 var Watcher = require('../../watcher')
@@ -4168,7 +4178,7 @@ function indexOf (arr, val) {
 }
 
 }).call(this,require('_process'))
-},{"../../parsers/directive":67,"../../util":79,"../../watcher":83,"_process":17}],44:[function(require,module,exports){
+},{"../../parsers/directive":69,"../../util":81,"../../watcher":85,"_process":19}],46:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -4302,7 +4312,7 @@ module.exports = {
   }
 }
 
-},{"../../util":79}],45:[function(require,module,exports){
+},{"../../util":81}],47:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 
@@ -4365,7 +4375,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],46:[function(require,module,exports){
+},{"../util":81,"_process":19}],48:[function(require,module,exports){
 // NOTE: the prop internal directive is compiled and linked
 // during _initScope(), before the created hook is called.
 // The purpose is to make the initial prop values available
@@ -4429,7 +4439,7 @@ module.exports = {
   }
 }
 
-},{"../config":30,"../util":79,"../watcher":83}],47:[function(require,module,exports){
+},{"../config":32,"../util":81,"../watcher":85}],49:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 
@@ -4455,7 +4465,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],48:[function(require,module,exports){
+},{"../util":81,"_process":19}],50:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var config = require('../config')
@@ -5229,7 +5239,7 @@ function isPrimitive (value) {
 }
 
 }).call(this,require('_process'))
-},{"../compiler":28,"../config":30,"../parsers/expression":68,"../parsers/template":70,"../parsers/text":71,"../util":79,"_process":17}],49:[function(require,module,exports){
+},{"../compiler":30,"../config":32,"../parsers/expression":70,"../parsers/template":72,"../parsers/text":73,"../util":81,"_process":19}],51:[function(require,module,exports){
 var transition = require('../transition')
 
 module.exports = function (value) {
@@ -5239,7 +5249,7 @@ module.exports = function (value) {
   }, this.vm)
 }
 
-},{"../transition":72}],50:[function(require,module,exports){
+},{"../transition":74}],52:[function(require,module,exports){
 var _ = require('../util')
 var prefixes = ['-webkit-', '-moz-', '-ms-']
 var camelPrefixes = ['Webkit', 'Moz', 'ms']
@@ -5351,7 +5361,7 @@ function prefix (prop) {
   }
 }
 
-},{"../util":79}],51:[function(require,module,exports){
+},{"../util":81}],53:[function(require,module,exports){
 var _ = require('../util')
 
 module.exports = {
@@ -5367,7 +5377,7 @@ module.exports = {
   }
 }
 
-},{"../util":79}],52:[function(require,module,exports){
+},{"../util":81}],54:[function(require,module,exports){
 var _ = require('../util')
 var Transition = require('../transition/transition')
 
@@ -5395,7 +5405,7 @@ module.exports = {
   }
 }
 
-},{"../transition/transition":74,"../util":79}],53:[function(require,module,exports){
+},{"../transition/transition":76,"../util":81}],55:[function(require,module,exports){
 var _ = require('../util')
 var clone = require('../parsers/template').clone
 
@@ -5508,11 +5518,11 @@ function extractFragment (nodes, parent, main) {
   return frag
 }
 
-},{"../parsers/template":70,"../util":79}],54:[function(require,module,exports){
+},{"../parsers/template":72,"../util":81}],56:[function(require,module,exports){
 exports.content = require('./content')
 exports.partial = require('./partial')
 
-},{"./content":53,"./partial":55}],55:[function(require,module,exports){
+},{"./content":55,"./partial":57}],57:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var templateParser = require('../parsers/template')
@@ -5589,7 +5599,7 @@ module.exports = {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../compiler":28,"../directives/if":38,"../parsers/template":70,"../parsers/text":71,"../util":79,"_process":17}],56:[function(require,module,exports){
+},{"../cache":27,"../compiler":30,"../directives/if":40,"../parsers/template":72,"../parsers/text":73,"../util":81,"_process":19}],58:[function(require,module,exports){
 var _ = require('../util')
 var Path = require('../parsers/path')
 
@@ -5688,7 +5698,7 @@ function contains (val, search) {
   }
 }
 
-},{"../parsers/path":69,"../util":79}],57:[function(require,module,exports){
+},{"../parsers/path":71,"../util":81}],59:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -5836,7 +5846,7 @@ exports.debounce = function (handler, delay) {
 
 _.extend(exports, require('./array-filters'))
 
-},{"../util":79,"./array-filters":56}],58:[function(require,module,exports){
+},{"../util":81,"./array-filters":58}],60:[function(require,module,exports){
 var _ = require('../util')
 var Directive = require('../directive')
 var compiler = require('../compiler')
@@ -6038,7 +6048,7 @@ exports._cleanup = function () {
   this.$off()
 }
 
-},{"../compiler":28,"../directive":31,"../util":79}],59:[function(require,module,exports){
+},{"../compiler":30,"../directive":33,"../util":81}],61:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var inDoc = _.inDoc
@@ -6181,7 +6191,7 @@ exports._callHook = function (hook) {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],60:[function(require,module,exports){
+},{"../util":81,"_process":19}],62:[function(require,module,exports){
 var mergeOptions = require('../util').mergeOptions
 
 /**
@@ -6272,7 +6282,7 @@ exports._init = function (options) {
   }
 }
 
-},{"../util":79}],61:[function(require,module,exports){
+},{"../util":81}],63:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 
@@ -6369,7 +6379,7 @@ exports._resolveComponent = function (id, cb) {
 }
 
 }).call(this,require('_process'))
-},{"../util":79,"_process":17}],62:[function(require,module,exports){
+},{"../util":81,"_process":19}],64:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -6655,7 +6665,7 @@ exports._defineMeta = function (key, value) {
 }
 
 }).call(this,require('_process'))
-},{"../compiler":28,"../observer":65,"../observer/dep":64,"../util":79,"../watcher":83,"_process":17}],63:[function(require,module,exports){
+},{"../compiler":30,"../observer":67,"../observer/dep":66,"../util":81,"../watcher":85,"_process":19}],65:[function(require,module,exports){
 var _ = require('../util')
 var arrayProto = Array.prototype
 var arrayMethods = Object.create(arrayProto)
@@ -6755,7 +6765,7 @@ _.define(
 
 module.exports = arrayMethods
 
-},{"../util":79}],64:[function(require,module,exports){
+},{"../util":81}],66:[function(require,module,exports){
 var _ = require('../util')
 var uid = 0
 
@@ -6818,7 +6828,7 @@ Dep.prototype.notify = function () {
 
 module.exports = Dep
 
-},{"../util":79}],65:[function(require,module,exports){
+},{"../util":81}],67:[function(require,module,exports){
 var _ = require('../util')
 var config = require('../config')
 var Dep = require('./dep')
@@ -7054,7 +7064,7 @@ function copyAugment (target, src, keys) {
 
 module.exports = Observer
 
-},{"../config":30,"../util":79,"./array":63,"./dep":64,"./object":66}],66:[function(require,module,exports){
+},{"../config":32,"../util":81,"./array":65,"./dep":66,"./object":68}],68:[function(require,module,exports){
 var _ = require('../util')
 var objProto = Object.prototype
 
@@ -7138,7 +7148,7 @@ _.define(
   }
 )
 
-},{"../util":79}],67:[function(require,module,exports){
+},{"../util":81}],69:[function(require,module,exports){
 var _ = require('../util')
 var Cache = require('../cache')
 var cache = new Cache(1000)
@@ -7320,7 +7330,7 @@ exports.parse = function (s) {
   return dirs
 }
 
-},{"../cache":25,"../util":79}],68:[function(require,module,exports){
+},{"../cache":27,"../util":81}],70:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var Path = require('./path')
@@ -7588,7 +7598,7 @@ exports.isSimplePath = function (exp) {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../util":79,"./path":69,"_process":17}],69:[function(require,module,exports){
+},{"../cache":27,"../util":81,"./path":71,"_process":19}],71:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var Cache = require('../cache')
@@ -7940,7 +7950,7 @@ function warnNonExistent (path) {
 }
 
 }).call(this,require('_process'))
-},{"../cache":25,"../util":79,"_process":17}],70:[function(require,module,exports){
+},{"../cache":27,"../util":81,"_process":19}],72:[function(require,module,exports){
 var _ = require('../util')
 var Cache = require('../cache')
 var templateCache = new Cache(1000)
@@ -8230,7 +8240,7 @@ exports.parse = function (template, clone, noSelector) {
     : frag
 }
 
-},{"../cache":25,"../util":79}],71:[function(require,module,exports){
+},{"../cache":27,"../util":81}],73:[function(require,module,exports){
 var Cache = require('../cache')
 var config = require('../config')
 var dirParser = require('./directive')
@@ -8410,7 +8420,7 @@ function inlineFilters (exp, single) {
   }
 }
 
-},{"../cache":25,"../config":30,"./directive":67}],72:[function(require,module,exports){
+},{"../cache":27,"../config":32,"./directive":69}],74:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -8540,7 +8550,7 @@ var apply = exports.apply = function (el, direction, op, vm, cb) {
   transition[action](op, cb)
 }
 
-},{"../util":79}],73:[function(require,module,exports){
+},{"../util":81}],75:[function(require,module,exports){
 var _ = require('../util')
 var queue = []
 var queued = false
@@ -8577,7 +8587,7 @@ function flush () {
   return f
 }
 
-},{"../util":79}],74:[function(require,module,exports){
+},{"../util":81}],76:[function(require,module,exports){
 var _ = require('../util')
 var queue = require('./queue')
 var addClass = _.addClass
@@ -8936,7 +8946,7 @@ function isHidden (el) {
 
 module.exports = Transition
 
-},{"../util":79,"./queue":73}],75:[function(require,module,exports){
+},{"../util":81,"./queue":75}],77:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 
@@ -9064,7 +9074,7 @@ function formatValue (val) {
 }
 
 }).call(this,require('_process'))
-},{"./index":79,"_process":17}],76:[function(require,module,exports){
+},{"./index":81,"_process":19}],78:[function(require,module,exports){
 (function (process){
 /**
  * Enable debug utilities.
@@ -9132,7 +9142,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"_process":17}],77:[function(require,module,exports){
+},{"../config":32,"_process":19}],79:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 var config = require('../config')
@@ -9408,7 +9418,7 @@ exports.createAnchor = function (content, persist) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"./index":79,"_process":17}],78:[function(require,module,exports){
+},{"../config":32,"./index":81,"_process":19}],80:[function(require,module,exports){
 // can we use __proto__?
 exports.hasProto = '__proto__' in {}
 
@@ -9495,7 +9505,7 @@ exports.nextTick = (function () {
   }
 })()
 
-},{}],79:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 var lang = require('./lang')
 var extend = lang.extend
 
@@ -9506,7 +9516,7 @@ extend(exports, require('./options'))
 extend(exports, require('./component'))
 extend(exports, require('./debug'))
 
-},{"./component":75,"./debug":76,"./dom":77,"./env":78,"./lang":80,"./options":81}],80:[function(require,module,exports){
+},{"./component":77,"./debug":78,"./dom":79,"./env":80,"./lang":82,"./options":83}],82:[function(require,module,exports){
 /**
  * Check if a string starts with $ or _
  *
@@ -9818,7 +9828,7 @@ exports.looseEqual = function (a, b) {
   /* eslint-enable eqeqeq */
 }
 
-},{}],81:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 var config = require('../config')
@@ -10179,7 +10189,7 @@ exports.resolveAsset = function resolve (options, type, id) {
 }
 
 }).call(this,require('_process'))
-},{"../config":30,"./index":79,"_process":17}],82:[function(require,module,exports){
+},{"../config":32,"./index":81,"_process":19}],84:[function(require,module,exports){
 var _ = require('./util')
 var extend = _.extend
 
@@ -10270,7 +10280,7 @@ extend(p, require('./api/lifecycle'))
 
 module.exports = _.Vue = Vue
 
-},{"./api/child":18,"./api/data":19,"./api/dom":20,"./api/events":21,"./api/global":22,"./api/lifecycle":23,"./directives":39,"./element-directives":54,"./filters":57,"./instance/compile":58,"./instance/events":59,"./instance/init":60,"./instance/misc":61,"./instance/scope":62,"./util":79}],83:[function(require,module,exports){
+},{"./api/child":20,"./api/data":21,"./api/dom":22,"./api/events":23,"./api/global":24,"./api/lifecycle":25,"./directives":41,"./element-directives":56,"./filters":59,"./instance/compile":60,"./instance/events":61,"./instance/init":62,"./instance/misc":63,"./instance/scope":64,"./util":81}],85:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -10586,7 +10596,98 @@ function traverse (obj) {
 module.exports = Watcher
 
 }).call(this,require('_process'))
-},{"./batcher":24,"./config":30,"./observer/dep":64,"./parsers/expression":68,"./util":79,"_process":17}],84:[function(require,module,exports){
+},{"./batcher":26,"./config":32,"./observer/dep":66,"./parsers/expression":70,"./util":81,"_process":19}],86:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _mohayonaoEventEmitter = require("@mohayonao/event-emitter");
+
+var _mohayonaoEventEmitter2 = _interopRequireDefault(_mohayonaoEventEmitter);
+
+var _mohayonaoLaunchControlWebmidi = require("@mohayonao/launch-control/webmidi");
+
+var _mohayonaoLaunchControlWebmidi2 = _interopRequireDefault(_mohayonaoLaunchControlWebmidi);
+
+var _mohayonaoUtilsLinexp = require("@mohayonao/utils/linexp");
+
+var _mohayonaoUtilsLinexp2 = _interopRequireDefault(_mohayonaoUtilsLinexp);
+
+var _mohayonaoUtilsLinlin = require("@mohayonao/utils/linlin");
+
+var _mohayonaoUtilsLinlin2 = _interopRequireDefault(_mohayonaoUtilsLinlin);
+
+var instance = null;
+
+function q(x) {
+  return (0, _mohayonaoUtilsLinlin2["default"])(x, 0, 127, 0.1, 40);
+}
+
+function g(x) {
+  return (0, _mohayonaoUtilsLinlin2["default"])(x, 0, 127, 0, 40);
+}
+
+var Parameter = (function (_EventEmitter) {
+  _inherits(Parameter, _EventEmitter);
+
+  function Parameter() {
+    var _this = this;
+
+    _classCallCheck(this, Parameter);
+
+    _get(Object.getPrototypeOf(Parameter.prototype), "constructor", this).call(this);
+
+    this.launchControl = new _mohayonaoLaunchControlWebmidi2["default"]();
+    this.launchControl.open();
+    this.values = new Float32Array([518.33, 30, 14.103, 533.49, 30, 12.126, 662.42, 30, 40, 673.16, 28.19, 40, 1050.98, 30, 40, 1368.8, 30, 40, 1648.9, 30, 40, 1672, 25.12, 40]);
+
+    this.launchControl.on("message", function (_ref) {
+      var dataType = _ref.dataType;
+      var track = _ref.track;
+      var value = _ref.value;
+
+      var index = track * 3 + (dataType === "knob1" ? 1 : 2);
+
+      if (typeof index === "number") {
+        if (index % 3 === 1) {
+          _this.values[index] = q(value);
+        } else {
+          _this.values[index] = g(value);
+        }
+        _this.emit("update", { values: _this.values });
+      }
+    });
+  }
+
+  _createClass(Parameter, null, [{
+    key: "getInstance",
+    value: function getInstance() {
+      if (instance === null) {
+        instance = new Parameter();
+      }
+      return instance;
+    }
+  }]);
+
+  return Parameter;
+})(_mohayonaoEventEmitter2["default"]);
+
+exports["default"] = Parameter;
+module.exports = exports["default"];
+
+},{"@mohayonao/event-emitter":5,"@mohayonao/launch-control/webmidi":93,"@mohayonao/utils/linexp":14,"@mohayonao/utils/linlin":15}],87:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10622,6 +10723,8 @@ var _mohayonaoUtilsMidicps2 = _interopRequireDefault(_mohayonaoUtilsMidicps);
 var _SQEfx = require("./SQEfx");
 
 var _SQEfx2 = _interopRequireDefault(_SQEfx);
+
+var instance = null;
 
 var Player = (function (_EventEmitter) {
   _inherits(Player, _EventEmitter);
@@ -10673,6 +10776,14 @@ var Player = (function (_EventEmitter) {
       this.efx = null;
       this.conv = null;
     }
+  }], [{
+    key: "getInstance",
+    value: function getInstance() {
+      if (instance === null) {
+        instance = new Player();
+      }
+      return instance;
+    }
   }]);
 
   return Player;
@@ -10681,7 +10792,7 @@ var Player = (function (_EventEmitter) {
 exports["default"] = Player;
 module.exports = exports["default"];
 
-},{"./SQEfx":85,"@mohayonao/event-emitter":5,"@mohayonao/utils/midicps":14,"@mohayonao/web-audio-utils/fetchAudioBuffer":15,"@mohayonao/web-audio-utils/getAudioContext":16}],85:[function(require,module,exports){
+},{"./SQEfx":88,"@mohayonao/event-emitter":5,"@mohayonao/utils/midicps":16,"@mohayonao/web-audio-utils/fetchAudioBuffer":17,"@mohayonao/web-audio-utils/getAudioContext":18}],88:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10706,8 +10817,14 @@ var _mohayonaoEq = require("@mohayonao/eq");
 
 var _mohayonaoEq2 = _interopRequireDefault(_mohayonaoEq);
 
+var _Parameter = require("./Parameter");
+
+var _Parameter2 = _interopRequireDefault(_Parameter);
+
 var SQEfx = (function () {
   function SQEfx(audioContext) {
+    var _this = this;
+
     _classCallCheck(this, SQEfx);
 
     this.context = audioContext;
@@ -10728,18 +10845,7 @@ var SQEfx = (function () {
 
     this.conv = this.context.createConvolver();
 
-    // { frequency: 518.33, gain: 30, Q: 14.103 },
-    // { frequency: 533.49, gain: 30, Q: 12.126 },
-    // { frequency: 662.42, gain: 30, Q: 40 },
-    // { frequency: 673.16, gain: 28.19, Q: 40 },
-    // { frequency: 1050.98, gain: 30, Q: 40 },
-    // { frequency: 1368.8, gain: 30, Q: 40 },
-    // { frequency: 1648.9, gain: 30, Q: 40 },
-    // { frequency: 1672, gain: 25.12, Q: 40 },
-    // { type: "hpf", frequency: 86.957, Q: 0.025 },
-    // { type: "lpf", frequency: 2296.3, Q: 0.9 },
-
-    this.eq = new _mohayonaoEq2["default"](this.context, [{ frequency: 518.33, gain: 25, Q: 6.24 }, { frequency: 533.49, gain: 25, Q: 5.309 }, { frequency: 662.42, gain: 25, Q: 26.699 }, { frequency: 673.16, gain: 28.19, Q: 26.699 }, { frequency: 1050.98, gain: 30, Q: 26.699 }, { frequency: 1368.8, gain: 45, Q: 26.699 }, { frequency: 1648.9, gain: 25, Q: 26.699 }, { frequency: 1672, gain: 25.12, Q: 26.699 }, { type: "hpf", frequency: 86.957, Q: 0.025 }, { type: "lpf", frequency: 2296.3, Q: 5.9 }]);
+    this.eq = new _mohayonaoEq2["default"](this.context, [{ frequency: 518.33, gain: 30, Q: 14.103 }, { frequency: 533.49, gain: 30, Q: 12.126 }, { frequency: 662.42, gain: 30, Q: 40 }, { frequency: 673.16, gain: 28.19, Q: 40 }, { frequency: 1050.98, gain: 30, Q: 40 }, { frequency: 1368.8, gain: 30, Q: 40 }, { frequency: 1648.9, gain: 30, Q: 40 }, { frequency: 1672, gain: 25.12, Q: 40 }, { type: "hpf", frequency: 86.957, Q: 0.025 }, { type: "lpf", frequency: 2296.3, Q: 0.9 }]);
     this.inGain2.connect(this.eq);
     this.eq.connect(this.outGain2);
 
@@ -10750,6 +10856,16 @@ var SQEfx = (function () {
     this.outGain2.connect(this.conv);
 
     this.conv.connect(this.outlet);
+
+    _Parameter2["default"].getInstance().on("update", function (_ref) {
+      var values = _ref.values;
+
+      for (var i = 0, j = 0; i < 8; i++) {
+        _this.eq.filters[i].frequency.value = values[j++];
+        _this.eq.filters[i].Q.value = values[j++];
+        _this.eq.filters[i].gain.value = values[j++];
+      }
+    });
   }
 
   _createClass(SQEfx, [{
@@ -10793,7 +10909,7 @@ var SQEfx = (function () {
 exports["default"] = SQEfx;
 module.exports = exports["default"];
 
-},{"@mohayonao/eq":1,"@mohayonao/feedback-delay":6,"@mohayonao/operator":11}],86:[function(require,module,exports){
+},{"./Parameter":86,"@mohayonao/eq":1,"@mohayonao/feedback-delay":6,"@mohayonao/operator":11}],89:[function(require,module,exports){
 "use strict";
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -10806,13 +10922,30 @@ var _Player = require("./Player");
 
 var _Player2 = _interopRequireDefault(_Player);
 
+var _Parameter = require("./Parameter");
+
+var _Parameter2 = _interopRequireDefault(_Parameter);
+
 window.addEventListener("DOMContentLoaded", function () {
   var player = new _Player2["default"]();
+
+  _Parameter2["default"].getInstance().on("update", function (_ref) {
+    var values = _ref.values;
+
+    var params = [];
+
+    for (var i = 0, j = 0; i < 8; i++) {
+      params.push([values[j++], values[j++], values[j++]]);
+    }
+
+    app.params = params;
+  });
 
   var app = new _vue2["default"]({
     el: "#app",
     data: {
-      state: "ready"
+      state: "ready",
+      params: []
     },
     methods: {
       onClick: function onClick() {
@@ -10832,4 +10965,450 @@ window.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-},{"./Player":84,"vue":82}]},{},[86]);
+},{"./Parameter":86,"./Player":87,"vue":84}],90:[function(require,module,exports){
+arguments[4][5][0].apply(exports,arguments)
+},{"dup":5}],91:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+var _CURSOR, _extends$parseMessage$buildLedData;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _xtend = require("xtend");
+
+var _xtend2 = _interopRequireDefault(_xtend);
+
+var PAD = [0x09, 0x0a, 0x0b, 0x0c, 0x19, 0x1a, 0x1b, 0x1c];
+var KNOB1 = [0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c];
+var KNOB2 = [0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30];
+var CURSOR = (_CURSOR = {}, _defineProperty(_CURSOR, 0x72, "up"), _defineProperty(_CURSOR, 0x73, "down"), _defineProperty(_CURSOR, 0x74, "left"), _defineProperty(_CURSOR, 0x75, "right"), _CURSOR);
+var COLOR_NAMES = {
+  off: 0,
+  "dark red": 1,
+  red: 2,
+  "light red": 3,
+  "dark green": 4,
+  "dark amber": 5,
+  green: 8,
+  amber: 10,
+  "light green": 12,
+  "light amber": 15
+};
+var TRACK_SELECTOR = {
+  all: function all() {
+    return true;
+  },
+  even: function even(_, i) {
+    return i % 2 === 0;
+  },
+  odd: function odd(_, i) {
+    return i % 2 === 1;
+  }
+};
+
+function parseMessage(st, d1, d2) {
+  var messageType = st & 0xf0;
+  var value = Math.max(0, Math.min(d2, 127));
+  var channel = Math.max(0, Math.min(st & 0x0f, 15));
+  var track = undefined;
+
+  // note on
+  if (messageType === 0x90 && value !== 0) {
+    track = PAD.indexOf(d1);
+    if (track !== -1) {
+      return { dataType: "pad", track: track, value: value, channel: channel };
+    }
+  }
+
+  // control change
+  if (messageType === 0xb0) {
+    track = KNOB1.indexOf(d1);
+    if (track !== -1) {
+      return { dataType: "knob1", track: track, value: value, channel: channel };
+    }
+
+    track = KNOB2.indexOf(d1);
+    if (track !== -1) {
+      return { dataType: "knob2", track: track, value: value, channel: channel };
+    }
+
+    var cursor = CURSOR[d1];
+
+    if (cursor && value !== 0) {
+      return { dataType: "cursor", direction: cursor, value: value, channel: channel };
+    }
+  }
+
+  return null;
+}
+
+function buildLedData(track, color, channel) {
+  if (typeof color === "string") {
+    color = COLOR_NAMES[color];
+  }
+  color = (color | 0) % 16;
+
+  var st = 0x90 + (channel | 0) % 16;
+  var d2 = ((color & 0x0c) << 2) + 0x0c + (color & 0x03);
+
+  if (TRACK_SELECTOR.hasOwnProperty(track)) {
+    return PAD.filter(TRACK_SELECTOR[track]).map(function (d1) {
+      return [st, d1, d2];
+    });
+  }
+
+  if (/^[-o]+$/.test(track)) {
+    var data = [];
+
+    for (var i = 0; i < 8; i++) {
+      if (track[i % track.length] === "o") {
+        data.push([st, PAD[i], d2]);
+      }
+    }
+
+    return data;
+  }
+
+  var d1 = PAD[(track | 0) % 8];
+
+  return [[st, d1, d2]];
+}
+
+function _extends(MIDIDevice) {
+  return (function (_MIDIDevice) {
+    function LaunchControl() {
+      var _this = this;
+
+      var deviceName = arguments[0] === undefined ? "Launch Control" : arguments[0];
+
+      _classCallCheck(this, LaunchControl);
+
+      _get(Object.getPrototypeOf(LaunchControl.prototype), "constructor", this).call(this, deviceName);
+
+      this._channel = 8;
+      this._onmidimessage = function (e) {
+        var msg = parseMessage(e.data[0], e.data[1], e.data[2]);
+
+        if (msg === null) {
+          return;
+        }
+
+        _this._channel = msg.channel;
+        _this.emit("message", (0, _xtend2["default"])({ type: "message", deviceName: _this.deviceName }, msg));
+      };
+    }
+
+    _inherits(LaunchControl, _MIDIDevice);
+
+    _createClass(LaunchControl, [{
+      key: "led",
+      value: function led(track, color) {
+        var _this2 = this;
+
+        var channel = arguments[2] === undefined ? this._channel : arguments[2];
+
+        buildLedData(track, color, channel).forEach(function (data) {
+          _this2.send(data);
+        });
+      }
+    }]);
+
+    return LaunchControl;
+  })(MIDIDevice);
+}
+
+exports["default"] = (_extends$parseMessage$buildLedData = {}, _defineProperty(_extends$parseMessage$buildLedData, "extends", _extends), _defineProperty(_extends$parseMessage$buildLedData, "parseMessage", parseMessage), _defineProperty(_extends$parseMessage$buildLedData, "buildLedData", buildLedData), _extends$parseMessage$buildLedData);
+module.exports = exports["default"];
+},{"xtend":98}],92:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _mohayonaoMidiDeviceWebmidi = require("@mohayonao/midi-device/webmidi");
+
+var _mohayonaoMidiDeviceWebmidi2 = _interopRequireDefault(_mohayonaoMidiDeviceWebmidi);
+
+var _LaunchControl = require("./LaunchControl");
+
+var _LaunchControl2 = _interopRequireDefault(_LaunchControl);
+
+exports["default"] = _LaunchControl2["default"]["extends"](_mohayonaoMidiDeviceWebmidi2["default"]);
+module.exports = exports["default"];
+},{"./LaunchControl":91,"@mohayonao/midi-device/webmidi":97}],93:[function(require,module,exports){
+module.exports = require("./lib/WebMIDILaunchControl");
+
+},{"./lib/WebMIDILaunchControl":92}],94:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _mohayonaoEventEmitter = require("@mohayonao/event-emitter");
+
+var _mohayonaoEventEmitter2 = _interopRequireDefault(_mohayonaoEventEmitter);
+
+exports["default"] = _mohayonaoEventEmitter2["default"];
+module.exports = exports["default"];
+},{"@mohayonao/event-emitter":90}],95:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+var _EventEmitter2 = require("./EventEmitter");
+
+var _EventEmitter3 = _interopRequireDefault(_EventEmitter2);
+
+var MIDIDevice = (function (_EventEmitter) {
+  function MIDIDevice(deviceName) {
+    _classCallCheck(this, MIDIDevice);
+
+    _get(Object.getPrototypeOf(MIDIDevice.prototype), "constructor", this).call(this);
+
+    this._input = null;
+    this._output = null;
+    this._deviceName = deviceName;
+  }
+
+  _inherits(MIDIDevice, _EventEmitter);
+
+  _createClass(MIDIDevice, [{
+    key: "open",
+    value: function open() {
+      return Promise.reject(new Error("subclass responsibility"));
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      return Promise.reject(new Error("subclass responsibility"));
+    }
+  }, {
+    key: "send",
+    value: function send() {
+      throw new Error("subclass responsibility");
+    }
+  }, {
+    key: "_onmidimessage",
+    value: function _onmidimessage() {}
+  }, {
+    key: "deviceName",
+    get: function get() {
+      return this._deviceName;
+    }
+  }], [{
+    key: "requestDeviceNames",
+    value: function requestDeviceNames() {
+      return Promise.reject(new Error("subclass responsibility"));
+    }
+  }]);
+
+  return MIDIDevice;
+})(_EventEmitter3["default"]);
+
+exports["default"] = MIDIDevice;
+module.exports = exports["default"];
+},{"./EventEmitter":94}],96:[function(require,module,exports){
+(function (global){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+
+var _MIDIDevice2 = require("./MIDIDevice");
+
+var _MIDIDevice3 = _interopRequireDefault(_MIDIDevice2);
+
+function findMIDIPortByName(iter, deviceName) {
+  for (var x = iter.next(); !x.done; x = iter.next()) {
+    if (x.value.name === deviceName) {
+      return x.value;
+    }
+  }
+
+  return null;
+}
+
+function collectDeviceNames(iter) {
+  var result = [];
+
+  for (var x = iter.next(); !x.done; x = iter.next()) {
+    result.push(x.value.name);
+  }
+
+  return result;
+}
+
+var WebMIDIDevice = (function (_MIDIDevice) {
+  function WebMIDIDevice() {
+    _classCallCheck(this, WebMIDIDevice);
+
+    _get(Object.getPrototypeOf(WebMIDIDevice.prototype), "constructor", this).apply(this, arguments);
+  }
+
+  _inherits(WebMIDIDevice, _MIDIDevice);
+
+  _createClass(WebMIDIDevice, [{
+    key: "open",
+    value: function open() {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        if (!global.navigator || typeof global.navigator.requestMIDIAccess !== "function") {
+          return reject(new TypeError("Web MIDI API is not supported"));
+        }
+
+        if (_this._input !== null || _this._output !== null) {
+          return reject(new TypeError(_this.deviceName + " has already been opened"));
+        }
+
+        var successCallback = function successCallback(access) {
+          _this._access = access;
+
+          var input = findMIDIPortByName(access.inputs.values(), _this.deviceName);
+          var output = findMIDIPortByName(access.outputs.values(), _this.deviceName);
+
+          if (input === null && output === null) {
+            return reject(new TypeError(_this.deviceName + " is not found"));
+          }
+
+          if (input !== null) {
+            _this._input = input;
+
+            input.onmidimessage = function (e) {
+              _this._onmidimessage(e);
+            };
+          }
+
+          if (output !== null) {
+            _this._output = output;
+          }
+
+          return Promise.all([_this._input && _this._input.open(), _this._output && _this._output.open()]).then(resolve, reject);
+        };
+
+        if (_this._access) {
+          return successCallback(_this._access);
+        }
+
+        return global.navigator.requestMIDIAccess().then(successCallback, reject);
+      });
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      var _this2 = this;
+
+      return new Promise(function (resolve, reject) {
+        if (_this2._input === null && _this2._output === null) {
+          return reject(new TypeError(_this2.deviceName + " has already been closed"));
+        }
+
+        var input = _this2._input;
+        var output = _this2._output;
+
+        _this2._input = null;
+        _this2._output = null;
+
+        return Promise.all([input && input.close(), output && output.close()]).then(resolve, reject);
+      });
+    }
+  }, {
+    key: "send",
+    value: function send(data) {
+      if (this._output !== null) {
+        this._output.send(data);
+      }
+    }
+  }], [{
+    key: "requestDeviceNames",
+    value: function requestDeviceNames() {
+      return new Promise(function (resolve, reject) {
+        if (!global.navigator || typeof global.navigator.requestMIDIAccess !== "function") {
+          return reject(new TypeError("Web MIDI API is not supported"));
+        }
+
+        return global.navigator.requestMIDIAccess().then(function (access) {
+          var inputDeviceNames = collectDeviceNames(access.inputs.values());
+          var outputDeviceNames = collectDeviceNames(access.outputs.values());
+
+          resolve({
+            inputs: inputDeviceNames,
+            outputs: outputDeviceNames
+          });
+        }, reject);
+      });
+    }
+  }]);
+
+  return WebMIDIDevice;
+})(_MIDIDevice3["default"]);
+
+exports["default"] = WebMIDIDevice;
+module.exports = exports["default"];
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./MIDIDevice":95}],97:[function(require,module,exports){
+module.exports = require("./lib/WebMIDIDevice");
+
+},{"./lib/WebMIDIDevice":96}],98:[function(require,module,exports){
+module.exports = extend
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    return target
+}
+
+},{}]},{},[89]);
