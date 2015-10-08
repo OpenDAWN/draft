@@ -2,55 +2,39 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>gps test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300">
-  <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="index.css">
+  <title>ADSR</title>
+  <style>
+    * { margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { background: #000; color: #fff; user-select: none; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
+    #container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; width: 300px; height: 190px; text-align: center; }
+    #logo { font-family: "Roboto", sans-serif; font-size: 64px; cursor: pointer; }
+    #selector { display: none; }
+    #selector ul { list-style: none; margin: 25px 0; font-size: 14px; }
+    #selector li { display: inline-block; padding: 0 10px; cursor: pointer; }
+    #close { display: none; margin: 25px; font-size: 32px; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <div class="container">
-      <h1>gps test</h1>
-      <div class="row">
-        <div class="col-md-2">
-          <button class="btn btn-default" v-on="click:onClick">SEARCH</button>
-        </div>
-      </div>
-      <div class="row" style="margin: 15px 0">
-        <div class="col-md-3">
-          <label>latitude:</label> {{ latitude }}
-        </div>
-        <div class="col-md-3">
-          <label>longitude:</label> {{ longitude }}
-        </div>
-        <div class="col-md-3">
-          <label>accuracy:</label> {{ accuracy }}
-        </div>
-        <div class="col-md-3">
-          <label>guess:</label> {{ guess }}
-        </div>
-      </div>
-      <div class="row">
-        <table class="table table-bordered">
-          <tr>
-            <th>place</th>
-            <th>latitude</th>
-            <th>longitude</th>
-            <th>distance</th>
-            <th>info</th>
-          </tr>
-          <tr v-repeat="reports">
-            <td>{{ place }}</td>
-            <td>{{ latitude }}</td>
-            <td>{{ longitude }}</td>
-            <td>{{ distance }}</td>
-            <td>{{ info }}</td>
-          </tr>
-        </table>
+  <div id="container">
+    <span id="logo">ADSR</span>
+    <div id="selector">
+      <ul>
+        <li value="unebi">畝傍駅</li>
+        <li value="square">昭和スクエア</li>
+        <li value="kango">環濠跡</li>
+        <li value="uoko">魚幸</li>
+      </ul>
+      <div>
+        現在位置から作品を特定できませんでした。上のリストから作品を選択してください。
       </div>
     </div>
+    <div id="close">
+      ×
+    </div>
   </div>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/0.12.12/vue.min.js"></script>
   <script src="index.js"></script>
 </body>
 </html>

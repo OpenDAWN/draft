@@ -1,0 +1,10 @@
+{
+  "locations": {
+    "unebi": { "latutuide": 34.508369, "longitude": 135.793686 },
+    "square": { "latutuide": 34.506784, "longitude": 135.795755 },
+    "kango": { "latutuide": 34.510087, "longitude": 135.795766 },
+    "uoko": { "latutuide": 34.507943, "longitude": 135.795779 },
+    "cslab": { "latutuide": 34.740879, "longitude": 135.7658709 }
+  },
+  "accurate": 0.001
+}
